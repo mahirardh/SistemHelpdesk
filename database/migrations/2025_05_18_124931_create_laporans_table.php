@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('laporans', function (Blueprint $table) {
+            $table->id();
+            $table->string('ticket_number')->unique();
+            $table->string('email');
+            $table->string('phone');
+            $table->string('category');
+            $table->string('department')->nullable();
+            $table->text('description');
+            $table->string('status')->default('open'); // ✅ Default: open
+            $table->string('reporter_name');
+            $table->string('attachment')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('laporans');
+    }
+};
