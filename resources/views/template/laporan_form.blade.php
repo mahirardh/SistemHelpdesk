@@ -52,17 +52,13 @@
 
                 {{-- Baris 2: Kategori & Departemen --}}
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="category">Kategori Masalah</label>
-                        <select name="category" class="form-control" required>
-                            <option value="" disabled selected>-- Pilih Kategori --</option>
-                            <option value="Software">Software</option>
-                            <option value="Hardware">Hardware</option>
-                            <option value="Jaringan">Jaringan</option>
-                            <option value="Akun/Login">Akun/Login</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
+                    <select name="kategori_id" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                        @foreach ($kategoris as $kategori)
+                        <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                        @endforeach
+                    </select>
+
 
                     <div class="form-group col-md-6">
                         <label for="department">Departemen Pelapor</label>

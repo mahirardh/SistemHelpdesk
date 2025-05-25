@@ -1,4 +1,4 @@
-@extends('template.master')  <!-- Menyebutkan bahwa ini menggunakan layout master -->
+@extends('template.master') <!-- Menyebutkan bahwa ini menggunakan layout master -->
 
 @section('content') <!-- Konten utama untuk halaman ini -->
 <div class="container-fluid">
@@ -48,15 +48,15 @@
     <h5 class="mt-5 mb-3 font-weight-bold">LAPORAN YANG SEDANG DIPROSES</h5>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
-        <div class="col-md-3">
+            <div class="col-md-3">
             <div class="small-box bg-light">
                 <div class="inner text-center">
                     <h3>{{ rand(5, 12) }}</h3>
                     <p>Krani {{ $i }}</p>
                 </div>
             </div>
-        </div>
-        @endfor
     </div>
+    @endfor
+</div>
 </div>
 @endsection

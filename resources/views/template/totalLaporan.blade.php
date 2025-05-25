@@ -5,27 +5,24 @@
     <h1 class="mb-4 font-weight-bold">Laporan TI</h1>
 
     @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     <form method="GET" action="{{ route('totalLaporan') }}">
         <div class="row mb-3 align-items-center">
+            <!-- Tombol Tambah -->
             <div class="col-md-6 text-left">
                 <a href="{{ route('laporan.create') }}" class="btn btn-primary">
                     Tambah Laporan
                 </a>
             </div>
 
+            <!-- Form Pencarian -->
             <div class="col-md-4 offset-md-2">
                 <div class="input-group">
-                    <input
-                        type="text"
-                        name="search"
-                        class="form-control"
-                        placeholder="Cari berdasarkan nomor tiket"
-                        value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">
                             Cari
@@ -37,44 +34,46 @@
     </form>
 
     <table class="table table-bordered mt-4">
-        <thead>
-            <tr>
+        <thead class="thead-light">
+            <tr class="text-center">
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
                 <th>Kategori Masalah</th>
                 <th>Pelapor</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                <th width="160">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($laporans as $laporan)
-            <tr>
-                <td>{{ $laporan->ticket_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
-                <td>{{ $laporan->category }}</td>
-                <td>{{ $laporan->reporter_name }}</td>
-                <td>
-                    <span class="badge
-                        {{ $laporan->status == 'open' ? 'badge-warning' :
-                           ($laporan->status == 'in_progress' ? 'badge-info' : 'badge-success') }}">
-                        {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}
-                    </span>
-                </td>
-                <td>
-                    <a href="{{ route('laporan.edit', $laporan->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                </td>
-            </tr>
+                <tr class="text-center">
+                    <td>{{ $laporan->ticket_number }}</td>
+                    <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
+                    <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
+                    <td>{{ $laporan->pelapor->name ?? '-' }}</td>
+                    <td>
+                        <span class="badge 
+                            {{ $laporan->status == 'open' ? 'badge-warning' :
+                               ($laporan->status == 'in_progress' ? 'badge-info' : 'badge-success') }}">
+                            {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-secondary">Detail</a>
+                        <a href="{{ route('laporan.edit', $laporan->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    </td>
+                </tr>
             @empty
-            <tr>
-                <td colspan="6" class="text-center">Tidak ada data laporan.</td>
-            </tr>
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada data laporan.</td>
+                </tr>
             @endforelse
         </tbody>
     </table>
 
     <!-- Pagination -->
-    {{ $laporans->withQueryString()->links() }}
-
+    <div class="d-flex justify-content-end">
+        {{ $laporans->withQueryString()->links('pagination::bootstrap-4') }}
+    </div>
 </div>
 @endsection

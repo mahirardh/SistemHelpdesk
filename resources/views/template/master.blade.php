@@ -66,7 +66,11 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="../../index3.html" class="brand-link">
-                <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img
+                    src="../../dist/img/AdminLTELogo.png"
+                    alt="AdminLTE Logo"
+                    class="brand-image img-circle elevation-3"
+                    style="opacity: .8; max-width: 60px; height: auto;">
                 <span class="brand-text font-weight-light">Sistem Helpdesk</span>
             </a>
             <div class="sidebar">

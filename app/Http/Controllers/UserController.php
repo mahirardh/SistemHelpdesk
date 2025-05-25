@@ -55,6 +55,7 @@ class UserController extends Controller
         return view('template.show', compact('user'));
     }
 
+
     public function edit($id)
     {
         $user = User::findOrFail($id);

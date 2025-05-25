@@ -27,10 +27,11 @@ Route::middleware(['auth'])->group(function () {
     // Halaman tambahan (jika bukan controller)
     Route::view('/beranda', 'template.menu')->name('beranda');
     Route::get('/Laporan', [LaporanController::class, 'index'])->name('totalLaporan');
-    Route::view('/laporanSelesai', 'template.laporanSelesai')->name('laporanSelesai');
-    Route::view('/antrian', 'template.antrianLaporan')->name('antrian');
-    Route::view('/proses', 'template.laporanDiproses')->name('proses');
-
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::get('/laporan/Selesai', [LaporanController::class, 'selesai'])->name('laporanSelesai');
+    Route::get('/laporan/antrian', [LaporanController::class, 'antrian'])->name('antrian');
+    Route::get('/laporan/diproses', [LaporanController::class, 'diproses'])->name('proses');
     // Form tambah laporan
     Route::get('/laporan/create', [LaporanController::class, 'create'])->name('laporan.create');
     Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
@@ -42,7 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
     //laporan selesai tabel
     Route::get('/laporan/selesai', [LaporanController::class, 'selesai'])->name('laporan.selesai');
-    Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::get('/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
+
 
 
     // Resource User (hindari bentrok)
