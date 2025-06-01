@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Laporan;
 use App\Models\Kategori;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
@@ -60,21 +61,40 @@ class LaporanController extends Controller
         return redirect()->route('laporan.index')->with('success', 'Laporan berhasil ditambahkan.');
     }
 
-    public function edit(Laporan $laporan)
+    public function edit($id)
     {
-        return view('template.laporan_edit', compact('laporan'));
+        $laporan = Laporan::with(['kategori', 'pelapor'])->findOrFail($id);
+
+        // Ambil semua user yang bisa menjadi PIC (asisten TI dan krani)
+        $listPIC = User::whereIn('role', ['krani', 'asisten'])->get();
+
+        return view('template.laporan_edit', compact('laporan', 'listPIC'));
     }
 
-    public function update(Request $request, Laporan $laporan)
+    public function update(Request $request, $id)
     {
+        $laporan = Laporan::findOrFail($id);
+
         $request->validate([
-            'status' => 'required|in:open,in_progress,closed',
+            'status'      => 'required|in:open,in_progress,closed',
+            'pic_id'      => 'nullable|exists:users,id',
+            'sla_close'   => 'nullable|date',
+            'prioritas'   => 'nullable|in:rendah,sedang,tinggi', // pastikan lowercase sesuai DB
         ]);
 
-        $laporan->update(['status' => $request->status]);
+        // Debug log sementara
+
+        $laporan->update([
+            'status'    => $request->status,
+            'pic_id'    => $request->pic_id,
+            'sla_close' => $request->sla_close,
+            'prioritas' => $request->prioritas,
+        ]);
 
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }
+
+
 
     public function selesai(Request $request)
     {
@@ -94,7 +114,6 @@ class LaporanController extends Controller
         return view('template.laporan_show', compact('laporan'));
     }
 
-
     public function antrian()
     {
         $laporans = Laporan::with(['kategori', 'pelapor'])
@@ -113,5 +132,27 @@ class LaporanController extends Controller
             ->paginate(10);
 
         return view('template.diproses', compact('laporans'));
+    }
+    public function close(Request $request, $id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $laporan->status = 'closed';
+        $laporan->catatan_selesai = $request->catatan_selesai;
+        $laporan->save();
+
+        return redirect()->back()->with('success', 'Laporan berhasil ditutup dengan catatan.');
+    }
+    public function updateCatatan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_selesai' => 'required|string',
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+        $laporan->catatan_selesai = $request->catatan_selesai;
+        $laporan->status = 'closed';
+        $laporan->save();
+
+        return redirect()->route('laporan.index')->with('success', 'Laporan ditutup dengan catatan.');
     }
 }

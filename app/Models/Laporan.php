@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Kategori;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Kategori;
+use App\Models\User;  // Jangan lupa import ini
 
 class Laporan extends Model
 {
@@ -17,26 +18,30 @@ class Laporan extends Model
         'email',
         'phone',
         'kategori_id',
-        'pelapor_id',
         'department',
         'description',
         'status',
+        'pelapor_id',
         'attachment',
+        'pic_id',
+        'sla_close',
+        'prioritas'
     ];
 
     public $timestamps = true;
-
-    // Laporan.php
 
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 
-
-
     public function pelapor()
     {
         return $this->belongsTo(User::class, 'pelapor_id');
+    }
+    // Laporan.php
+    public function pic()
+    {
+        return $this->belongsTo(User::class, 'pic_id');
     }
 }

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{url ('plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{url ('dist/css/adminlte.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     @yield('css')
 </head>
 
@@ -27,9 +29,10 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Icon Profile -->
                 <li class="nav-item">
-                    <a href="{{ url('/profile') }}" class="nav-link">
+                    <a href="{{ route('profile.show') }}" class="nav-link">
                         <i class="fas fa-user"></i> Profile
                     </a>
+
                 </li>
 
                 <!-- Icon Logout -->
@@ -65,7 +68,7 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="../../index3.html" class="brand-link">
+            <a href="{{ route('beranda') }}" class="brand-link">
                 <img
                     src="../../dist/img/AdminLTELogo.png"
                     alt="AdminLTE Logo"

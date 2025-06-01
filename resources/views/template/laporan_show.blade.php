@@ -2,69 +2,111 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <h4 class="mb-4 font-weight-bold">📄 Detail Laporan</h4>
+    <h4 class="mb-4 fw-bold">
+        <i class="fas fa-file-alt"></i> Detail Laporan
+    </h4>
 
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card shadow rounded-3">
-                <div class="card-header bg-primary text-white">
-                    <strong>No Tiket:</strong> {{ $laporan->ticket_number }}
-                </div>
-
                 <div class="card-body p-4">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p><strong>Email:</strong><br>{{ $laporan->email }}</p>
+                            <label><strong>No. Tiket</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->ticket_number }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Telepon:</strong><br>{{ $laporan->phone }}</p>
+                            <label><strong>Nama Pelapor</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->pelapor->name ?? '-' }}" readonly>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p><strong>Departemen:</strong><br>{{ $laporan->department }}</p>
+                            <label><strong>Kategori</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->kategori->nama_kategori ?? '-' }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Kategori:</strong><br>{{ $laporan->kategori->nama_kategori ?? '-' }}</p>
+                            <label><strong>No. HP</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->phone }}" readonly>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p><strong>Pelapor:</strong><br>{{ $laporan->pelapor->name ?? '-' }}</p>
+                            <label><strong>Email</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->email }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <p>
-                                <strong>Status:</strong><br>
-                                <span class="badge 
-                                    {{ $laporan->status == 'open' ? 'badge-warning' : 
-                                       ($laporan->status == 'in_progress' ? 'badge-info' : 'badge-success') }}">
-                                    {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}
-                                </span>
-                            </p>
+                            <label><strong>Departemen</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->department }}" readonly>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <p><strong>Deskripsi:</strong><br>{{ $laporan->description }}</p>
+                        <label><strong>Deskripsi</strong></label>
+                        <textarea class="form-control" rows="4" readonly>{{ $laporan->description }}</textarea>
                     </div>
 
-                    @if ($laporan->attachment)
-                    <div class="mb-3">
-                        <p><strong>Lampiran:</strong><br>
-                            <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                📎 Lihat Lampiran
-                            </a>
-                        </p>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label><strong>Tanggal Laporan</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->created_at->format('d/m/Y') }}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Lampiran</strong></label><br>
+                            @if ($laporan->attachment)
+                            <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                            @else
+                            <span class="text-muted">Tidak ada file</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label><strong>PIC Penanggung Jawab</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->pic->name ?? '-' }}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Prioritas</strong></label>
+                            <input type="text" class="form-control" value="{{ ucfirst($laporan->prioritas) ?? '-' }}" readonly>
+                            <small class="form-text text-muted mt-1">
+                                <a href="{{ route('prioritas.aturan') }}" target="_blank">
+                                    Lihat aturan penentuan prioritas
+                                </a>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label><strong>SLA Close</strong></label>
+                            <input type="text" class="form-control" value="{{ $laporan->sla_close ?? '-' }}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Status</strong></label>
+                            <input type="text" class="form-control" value="{{ ucfirst(str_replace('_', ' ', $laporan->status)) }}" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Tambahkan bagian ini setelah semua informasi laporan -->
+                    @if($laporan->status == 'closed' && $laporan->catatan_selesai)
+                    <div class="card border-success mt-4">
+                        <div class="card-header bg-success text-white">
+                            <strong>Catatan Penyelesaian</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0">{{ $laporan->catatan_selesai }}</p>
+                        </div>
                     </div>
                     @endif
-                </div>
 
-                <div class="card-footer bg-light text-right">
-                    <a href="{{ route('totalLaporan') }}" class="btn btn-secondary">
-                        ← Kembali
-                    </a>
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ $laporan->ticket_number }}</td>
                     <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
-                    <td>{{ $laporan->kategori->nama ?? '-' }}</td>
+                    <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
                     <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                     <td><span class="badge badge-success">{{ ucfirst($laporan->status) }}</span></td>
                     <td><a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a></td>

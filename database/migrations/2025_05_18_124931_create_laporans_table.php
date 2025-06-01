@@ -18,6 +18,11 @@ return new class extends Migration {
             $table->string('status')->default('open'); // ✅ Default: open
             $table->string('reporter_name');
             $table->string('attachment')->nullable();
+            $table->unsignedBigInteger('kategori_id')->nullable();
+            $table->unsignedBigInteger('pelapor_id')->nullable();
+            $table->unsignedBigInteger('pic_id')->nullable();
+            $table->enum('prioritas', ['rendah', 'sedang', 'tinggi'])->nullable();
+            $table->date('sla_close')->nullable();
             $table->timestamps();
         });
     }
