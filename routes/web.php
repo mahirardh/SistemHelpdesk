@@ -7,6 +7,10 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Krani\Dashboard;
+use App\Http\Controllers\KraniController;
+use App\Http\Controllers\AsistenController;
+use App\Http\Controllers\PelaporController;
 
 // Routing login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -21,13 +25,15 @@ Route::post('/register', [RegisterController::class, 'register']);
 // Routing yang dilindungi auth
 Route::middleware(['auth'])->group(function () {
 
+
+    // HALAMAN ASISTEN
     // Halaman awal
     Route::get('/', function () {
-        return redirect()->route('beranda');
+        return redirect()->route('login');
     });
 
-    Route::view('/dashboard', 'template.dashboard')->name('dashboard');
-    Route::get('/beranda', [DashboardController::class, 'index'])->name('beranda');
+    // Route::view('/dashboard', 'template.dashboard')->name('dashboard');
+
     // Routing laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');           // Tampil semua laporan
     Route::get('/laporan/create', [LaporanController::class, 'create'])->name('laporan.create');   // Form tambah laporan
@@ -50,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Total laporan (alias ke index, bisa dihapus jika tidak perlu)
     Route::get('/Laporan', [LaporanController::class, 'index'])->name('totalLaporan');
+    Route::get('/LaporanPelapor', [LaporanController::class, 'index'])->name('laporan.pelapor');
+
 
     // CRUD user
     Route::resource('users', UserController::class);
@@ -62,4 +70,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/aturan-prioritas', function () {
         return view('template.aturan_prioritas'); // ini adalah view berisi PDF atau gambar aturan
     })->name('prioritas.aturan');
+
+    //krani 
+
+    Route::middleware('role:krani')->group(function () {
+        Route::get('/krani/dashboard', [KraniController::class, 'index'])->name('krani.dashboard');
+    });
+    Route::middleware('role:asisten')->group(function () {
+        Route::get('/beranda', [AsistenController::class, 'index'])->name('beranda');
+    });
+    Route::middleware('role:pelapor')->group(function () {
+        Route::get('/pelapor/dashboard', [PelaporController::class, 'index'])->name('pelapor.dashboard');
+    });
 });

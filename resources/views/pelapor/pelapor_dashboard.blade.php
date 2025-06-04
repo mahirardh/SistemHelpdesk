@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">BERANDA ASISTEN</h4>
+    <h4 class="mb-4 font-weight-bold">BERANDA</h4>
 
     <div class="row">
         <div class="col-md-3">
@@ -41,19 +41,5 @@
             </div>
         </div>
     </div>
-
-    <h5 class="mt-5 mb-3 font-weight-bold">LAPORAN YANG SEDANG DIPROSES</h5>
-        <div class="row">
-            @foreach ($laporanPerPIC as $pic)
-            <div class="col-md-3 mb-3">
-                <div class="small-box bg-light">
-                    <div class="inner text-center">
-                        <h3>{{ $pic->laporan_pic_count }}</h3>
-                        <p>{{ $pic->name }}</p>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
 </div>
 @endsection

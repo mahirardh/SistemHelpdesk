@@ -79,6 +79,7 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        @if(auth()->user()->role === 'asisten')
                         <li class="nav-item">
                             <a href="{{ route('beranda') }}" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -115,6 +116,67 @@
                                 <p>Tambah User</p>
                             </a>
                         </li>
+
+                        @elseif(auth()->user()->role === 'krani')
+                        <li class="nav-item">
+                            <a href="{{ route('krani.dashboard') }}" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>Beranda</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('totalLaporan') }}" class="nav-link">
+                                <i class="nav-icon fas fa-list-alt"></i>
+                                <p>Total Laporan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('laporanSelesai') }}" class="nav-link">
+                                <i class="nav-icon fas fa-check-circle"></i>
+                                <p>Laporan Selesai</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('antrian') }}" class="nav-link">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>Antrian Laporan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('proses') }}" class="nav-link">
+                                <i class="nav-icon fas fa-spinner"></i>
+                                <p>Laporan Diproses</p>
+                            </a>
+                        </li>
+                        {{-- Krani tidak bisa tambah user --}}
+
+                        @elseif(auth()->user()->role === 'pelapor')
+                        <li class="nav-item">
+                            <a href="{{ route('pelapor.dashboard') }}" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>Beranda</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('laporan.create') }}" class="nav-link">
+                                <i class="nav-icon fas fa-list-alt"></i>
+                                <p>Buat Laporan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('totalLaporan') }}" class="nav-link">
+                                <i class="nav-icon fas fa-check-circle"></i>
+                                <p>Laporan Saya</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('laporan.pelapor') }}" class="nav-link">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>Riwayat</p>
+                            </a>
+                        </li>
+                        {{-- Pelapor tidak bisa tambah user --}}
+                        @endif
                     </ul>
                 </nav>
             </div>

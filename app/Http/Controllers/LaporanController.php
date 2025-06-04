@@ -13,14 +13,30 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Laporan::with(['kategori', 'pelapor']); // eager load kategori dan pelapor (user)
+        $user = Auth::user();
 
-        if ($request->has('search')) {
+        // Mulai query laporan
+        $query = Laporan::with(['pelapor', 'pic', 'kategori']);
+
+        // Kalau user adalah krani, filter berdasarkan dirinya sebagai PIC
+        if ($user->role == 'krani') {
+            $query->where('pic_id', $user->id);
+        }
+        // Kalau user adalah pelapor, filter berdasarkan dirinya sebagai pelapor
+        if ($user->role == 'pelapor') {
+            $query->where('pelapor_id', $user->id);
+        }
+        // Fitur pencarian nomor tiket (opsional)
+        if ($request->filled('search')) {
             $query->where('ticket_number', 'like', '%' . $request->search . '%');
         }
 
-        $laporans = $query->paginate(10);
-
+        // Ambil hasil akhir
+        $laporans = $query->latest()->paginate(10);
+        // Return view sesuai dengan role user
+        if ($user->role === 'pelapor') {
+            return view('pelapor.laporanPelapor', compact('laporans'));
+        }
         return view('template.totalLaporan', compact('laporans'));
     }
 
@@ -98,13 +114,19 @@ class LaporanController extends Controller
 
     public function selesai(Request $request)
     {
-        $query = Laporan::where('status', 'closed');
+        $user = Auth::user();
 
-        if ($request->has('search') && $request->search != '') {
-            $query->where('ticket_number', 'like', '%' . $request->search . '%');
+        $query = Laporan::with(['pelapor', 'pic', 'kategori'])
+            ->where('status', 'closed');
+
+        // Jika user adalah krani, filter berdasarkan pic_id (hanya miliknya)
+        if ($user->role == 'krani') {
+            $query->where('pic_id', $user->id);
         }
-
-        $laporanSelesai = $query->orderBy('created_at', 'desc')->paginate(10);
+        if ($user->role == 'pelapor') {
+            $query->where('pelapor_id', $user->id);
+        }
+        $laporanSelesai = $query->latest()->paginate(10);
         return view('template.laporanSelesai', compact('laporanSelesai'));
     }
 
@@ -126,10 +148,19 @@ class LaporanController extends Controller
 
     public function diproses()
     {
-        $laporans = Laporan::with(['kategori', 'pelapor'])
-            ->where('status', 'in_progress')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $user = Auth::user();
+
+        $query = Laporan::with(['pelapor', 'pic', 'kategori'])
+            ->where('status', 'in_progress');
+
+        // Jika user adalah krani, hanya tampilkan laporan yang menjadi tanggung jawabnya
+        if ($user->role == 'krani') {
+            $query->where('pic_id', $user->id);
+        }
+        if ($user->role == 'pelapor') {
+            $query->where('pelapor_id', $user->id);
+        }
+        $laporans = $query->latest()->paginate(10);
 
         return view('template.diproses', compact('laporans'));
     }

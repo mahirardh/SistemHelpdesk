@@ -22,7 +22,19 @@ class LoginController extends Controller
         if (Auth::attempt(['no_sap' => $credentials['no_sap'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/');
+            $user = Auth::user();
+
+            // Redirect berdasarkan role
+            if ($user->role === 'asisten') {
+                return redirect()->route('beranda'); // misal: template.dashboard
+            } elseif ($user->role === 'krani') {
+                return redirect()->route('krani.dashboard');
+            } elseif ($user->role === 'pelapor') {
+                return redirect()->route('pelapor.dashboard'); // atau buat route khusus pelapor
+            } else {
+                Auth::logout(); // role tidak dikenal
+                return redirect()->route('login')->withErrors(['role' => 'Role tidak valid.']);
+            }
         }
 
         return back()->with('error', 'No. SAP atau Password salah!');
@@ -36,5 +48,4 @@ class LoginController extends Controller
 
         return redirect('/login');
     }
-    
 }

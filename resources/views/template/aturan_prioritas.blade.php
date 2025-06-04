@@ -15,13 +15,20 @@
         </div>
     </div>
 
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
             Dokumen PDF Aturan Prioritas
         </div>
         <div class="card-body">
             <iframe src="{{ asset('storage/aturan_prioritas.pdf') }}" width="100%" height="600px" style="border: none;"></iframe>
         </div>
+    </div>
+
+    <!-- Tombol Kembali -->
+    <div class="mt-4 text-end">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
     </div>
 </div>
 @endsection
