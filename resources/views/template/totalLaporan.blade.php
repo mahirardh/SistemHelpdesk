@@ -35,10 +35,10 @@
 
     <table class="table table-bordered mt-4">
         <thead class="thead-dark">
-            <tr class="text-center">
+            <tr>
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
-                <th>Pelapor</th>
+                <th>Nama Pelapor</th>
                 <th>PIC</th>
                 <th>Kategori Masalah</th>
                 <th>Status</th>
@@ -47,7 +47,7 @@
         </thead>
         <tbody>
             @forelse ($laporans as $laporan)
-            <tr class="text-center">
+            <tr>
                 <td>{{ $laporan->ticket_number }}</td>
                 <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>

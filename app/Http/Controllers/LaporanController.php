@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Laporan;
 use App\Models\Kategori;
 use App\Models\User;
+use App\Models\Timeline;
+
 use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
@@ -98,14 +100,18 @@ class LaporanController extends Controller
             'prioritas'   => 'nullable|in:rendah,sedang,tinggi', // pastikan lowercase sesuai DB
         ]);
 
-        // Debug log sementara
+        // Jika status baru adalah 'in_progress' dan sebelumnya belum di-set, isi tanggal_mulai
+        if ($request->status === 'in_progress' && !$laporan->tanggal_mulai) {
+            $laporan->tanggal_mulai = now();
+        }
 
-        $laporan->update([
-            'status'    => $request->status,
-            'pic_id'    => $request->pic_id,
-            'sla_close' => $request->sla_close,
-            'prioritas' => $request->prioritas,
-        ]);
+        // Tetap update kolom lain
+        $laporan->status    = $request->status;
+        $laporan->pic_id    = $request->pic_id;
+        $laporan->sla_close = $request->sla_close;
+        $laporan->prioritas = $request->prioritas;
+        $laporan->save();
+
 
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }
@@ -118,6 +124,10 @@ class LaporanController extends Controller
 
         $query = Laporan::with(['pelapor', 'pic', 'kategori'])
             ->where('status', 'closed');
+            
+        if ($request->has('search') && $request->search != '') {
+            $query->where('ticket_number', 'like', '%' . $request->search . '%');
+        }
 
         // Jika user adalah krani, filter berdasarkan pic_id (hanya miliknya)
         if ($user->role == 'krani') {
@@ -169,6 +179,7 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($id);
         $laporan->status = 'closed';
         $laporan->catatan_selesai = $request->catatan_selesai;
+        $laporan->tanggal_selesai = now(); // ✅ ini baris tambahan penting
         $laporan->save();
 
         return redirect()->back()->with('success', 'Laporan berhasil ditutup dengan catatan.');
@@ -182,8 +193,56 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($id);
         $laporan->catatan_selesai = $request->catatan_selesai;
         $laporan->status = 'closed';
+        $laporan->tanggal_selesai = now(); // ✅ tambahkan ini juga
         $laporan->save();
 
+
         return redirect()->route('laporan.index')->with('success', 'Laporan ditutup dengan catatan.');
+    }
+    public function timeline($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+
+        return response()->json([
+            'created_at'      => $laporan->created_at,
+            'tanggal_mulai'   => $laporan->tanggal_mulai,
+            'updated_at'      => $laporan->updated_at,
+            'tanggal_selesai' => $laporan->tanggal_selesai,           // waktu laporan selesai/close
+        ]);
+    }
+
+    // LaporanController.php
+
+    public function respon($id)
+    {
+        $user = request()->user(); // Ini tetap lebih clean daripada auth()->user()
+        $laporan = Laporan::findOrFail($id);
+
+        // Pastikan hanya pelapor asli yang bisa konfirmasi laporannya
+        if ($user->role !== 'pelapor' || $laporan->pelapor_id !== $user->id) {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        $laporan->user_confirmed = true;
+        $laporan->save();
+
+        return back()->with('success', 'Laporan telah dikonfirmasi selesai.');
+    }
+    public function riwayat(Request $request)
+    {
+        $user = Auth::user();
+
+        // Ambil laporan milik pelapor
+        $query = Laporan::with(['pelapor', 'pic', 'kategori'])
+            ->where('pelapor_id', $user->id);
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $query->where('ticket_number', 'like', '%' . $request->search . '%');
+        }
+
+        $laporans = $query->latest()->paginate(10);
+
+        return view('pelapor.riwayat', compact('laporans'));
     }
 }

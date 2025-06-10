@@ -10,23 +10,23 @@
         <div class="card-body">
             {{-- Pesan Berhasil --}}
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Tutup">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Tutup">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             @endif
 
             {{-- Pesan Validasi --}}
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0 pl-3">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="alert alert-danger">
+                <ul class="mb-0 pl-3">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
             <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data">
@@ -35,8 +35,10 @@
                 {{-- Nama Pelapor --}}
                 <div class="form-group">
                     <label for="reporter_name" class="font-weight-bold">Nama Pelapor</label>
-                    <input type="text" name="reporter_name" class="form-control" required>
+                    <input type="text" name="reporter_name" class="form-control"
+                        value="{{ Auth::user()->name }}" readonly>
                 </div>
+
 
                 {{-- Email & Telepon --}}
                 <div class="form-row">
@@ -57,7 +59,7 @@
                         <select name="kategori_id" class="form-control" required>
                             <option value="" disabled selected>-- Pilih Kategori --</option>
                             @foreach ($kategoris as $kategori)
-                                <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                            <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
                             @endforeach
                         </select>
                     </div>

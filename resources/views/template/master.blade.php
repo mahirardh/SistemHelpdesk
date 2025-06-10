@@ -5,12 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistem Helpdesk</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS (dengan Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{url ('plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{url ('dist/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{{ asset('dist/img/Logo_PTPN4.png') }}" type="image/png">
+
     @yield('css')
 </head>
 
@@ -68,13 +75,13 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="{{ route('beranda') }}" class="brand-link">
-                <img
-                    src="../../dist/img/AdminLTELogo.png"
-                    alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3"
-                    style="opacity: .8; max-width: 60px; height: auto;">
-                <span class="brand-text font-weight-light">Sistem Helpdesk</span>
+            <a href="{{ 
+                 auth()->user()->role === 'asisten' ? route('beranda') : 
+                 (auth()->user()->role === 'krani' ? route('krani.dashboard') : 
+                  (auth()->user()->role === 'pelapor' ? route('pelapor.dashboard') : '#')) 
+            }}" class="brand-link">
+            <img src="{{ asset('dist/img/Logo_PTPN4.png') }}" alt="Logo PTPN" class="brand-image img-circle elevation-3" style="opacity: .8; max-width: 60px; height: auto;">
+             <span class="brand-text font-weight-light">Sistem Helpdesk</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
@@ -170,7 +177,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('laporan.pelapor') }}" class="nav-link">
+                            <a href="{{ route('pelapor.riwayat') }}" class="nav-link">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>Riwayat</p>
                             </a>
@@ -196,6 +203,7 @@
     <script src="{{url ('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url ('dist/js/adminlte.min.js')}}"></script>
     @yield('js')
+    @stack('scripts')
 </body>
 
 </html>

@@ -22,26 +22,28 @@
             <tr>
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
+                <th>Nama Pelapor</th>
+                <th>PIC</th>
                 <th>Kategori Masalah</th>
-                <th>Pelapor</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($laporanSelesai as $laporan)
-                <tr>
-                    <td>{{ $laporan->ticket_number }}</td>
-                    <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
-                    <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
-                    <td>{{ $laporan->pelapor->name ?? '-' }}</td>
-                    <td><span class="badge badge-success">{{ ucfirst($laporan->status) }}</span></td>
-                    <td><a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a></td>
-                </tr>
+            <tr>
+                <td>{{ $laporan->ticket_number }}</td>
+                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
+                <td>{{ $laporan->pelapor->name ?? '-' }}</td>
+                <td>{{ $laporan->pic->name ?? '-' }}</td>
+                <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
+                <td><span class="badge badge-success">{{ ucfirst($laporan->status) }}</span></td>
+                <td><a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a></td>
+            </tr>
             @empty
-                <tr>
-                    <td colspan="6" class="text-center">Tidak ada laporan selesai ditemukan.</td>
-                </tr>
+            <tr>
+                <td colspan="6" class="text-center">Tidak ada laporan selesai ditemukan.</td>
+            </tr>
             @endforelse
         </tbody>
     </table>

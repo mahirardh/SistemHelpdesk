@@ -25,7 +25,13 @@ class Laporan extends Model
         'attachment',
         'pic_id',
         'sla_close',
-        'prioritas'
+        'prioritas',
+        'user_confirmed'
+    ];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'processed_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     public $timestamps = true;
@@ -43,5 +49,9 @@ class Laporan extends Model
     public function pic()
     {
         return $this->belongsTo(User::class, 'pic_id');
+    }
+    public function timeline()
+    {
+        return $this->hasMany(Timeline::class);
     }
 }

@@ -82,4 +82,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:pelapor')->group(function () {
         Route::get('/pelapor/dashboard', [PelaporController::class, 'index'])->name('pelapor.dashboard');
     });
+    Route::get('/laporan/{id}/timeline', [LaporanController::class, 'timeline']);
+
+    Route::post('/laporan/{id}/respon', [LaporanController::class, 'respon'])->name('laporan.respon');
+
+    Route::get('/riwayat', [LaporanController::class, 'riwayat'])->name('pelapor.riwayat');
 });
