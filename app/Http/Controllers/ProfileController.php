@@ -4,23 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Laporan;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     public function show()
     {
-        // dd(Auth::user()); // <-- hapus atau komentar
-
         $user = Auth::user();
 
-        $total = $user->laporan()->count();
-        $selesai = $user->laporan()->where('status', 'closed')->count();
-        $antrian = $user->laporan()->where('status', 'open')->count();
-        $diproses = $user->laporan()->where('status', 'in_progress')->count();
+        $totalLaporan = $laporanSelesai = $totalAntrian = $totalDiproses = $rating = null;
 
-        $rating = 5;
+        if (in_array($user->role, ['asisten', 'krani'])) {
+            $totalLaporan = Laporan::where('pic_id', $user->id)->count();
+            $laporanSelesai = Laporan::where('pic_id', $user->id)->where('status', 'closed')->count();
+            $totalAntrian = Laporan::where('pic_id', $user->id)->where('status', 'open')->count();
+            $totalDiproses = Laporan::where('pic_id', $user->id)->where('status', 'in_progress')->count();
+            $rating = round(Laporan::where('pic_id', $user->id)->whereNotNull('rating')->avg('rating'), 1) ?? 0;
+        }
 
-        return view('template.profile', compact('user', 'total', 'selesai', 'antrian', 'diproses', 'rating'));
+        return view('template.profile', compact(
+            'user',
+            'totalLaporan',
+            'laporanSelesai',
+            'totalAntrian',
+            'totalDiproses',
+            'rating'
+        ));
     }
 }

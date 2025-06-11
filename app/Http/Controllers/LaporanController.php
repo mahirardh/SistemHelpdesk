@@ -116,15 +116,13 @@ class LaporanController extends Controller
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }
 
-
-
     public function selesai(Request $request)
     {
         $user = Auth::user();
 
         $query = Laporan::with(['pelapor', 'pic', 'kategori'])
             ->where('status', 'closed');
-            
+
         if ($request->has('search') && $request->search != '') {
             $query->where('ticket_number', 'like', '%' . $request->search . '%');
         }
@@ -244,5 +242,24 @@ class LaporanController extends Controller
         $laporans = $query->latest()->paginate(10);
 
         return view('pelapor.riwayat', compact('laporans'));
+    }
+    public function ratingForm($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        return view('pelapor.rating', compact('laporan'));
+    }
+
+    public function submitRating(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+        $laporan->rating = $request->rating;
+        $laporan->user_confirmed = true;
+        $laporan->save();
+
+        return redirect()->route('pelapor.riwayat')->with('success', 'Terima kasih atas penilaian Anda.');
     }
 }

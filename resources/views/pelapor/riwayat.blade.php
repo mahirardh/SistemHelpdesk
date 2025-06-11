@@ -49,10 +49,7 @@
                     <td>{{ $laporan->tanggal_selesai ? \Carbon\Carbon::parse($laporan->tanggal_selesai)->format('d/m/y') : '-' }}</td>
                     <td>
                         @if($laporan->status === 'closed' && !$laporan->user_confirmed)
-                        <form action="{{ route('laporan.respon', $laporan->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-success">Respon</button>
-                        </form>
+                        <a href="{{ route('laporan.ratingForm', $laporan->id) }}" class="btn btn-sm btn-success">Respon</a>
                         @elseif($laporan->user_confirmed)
                         <span class="badge bg-success px-3 py-2">Selesai</span>
                         @else
