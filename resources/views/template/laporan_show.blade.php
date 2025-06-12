@@ -82,7 +82,8 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label><strong>SLA Close</strong></label>
-                            <input type="text" class="form-control" value="{{ $laporan->sla_close ?? '-' }}" readonly>
+                            <input type="text" class="form-control"
+                                value="{{ $laporan->sla_close ? \Carbon\Carbon::parse($laporan->sla_close)->format('d/m/Y') : '-' }}" readonly>
                         </div>
                         <div class="col-md-6">
                             <label><strong>Status</strong></label>

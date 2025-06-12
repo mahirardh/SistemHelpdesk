@@ -89,5 +89,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan/{id}/rating', [LaporanController::class, 'ratingForm'])->name('laporan.ratingForm');
     Route::post('/laporan/{id}/rating', [LaporanController::class, 'submitRating'])->name('laporan.submitRating');
 
+   
     Route::get('/riwayat', [LaporanController::class, 'riwayat'])->name('pelapor.riwayat');
+
+    Route::get('/knowledge-base', [LaporanController::class, 'knowledgeBase'])->name('knowledge.base');
+
 });

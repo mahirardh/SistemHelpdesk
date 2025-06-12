@@ -22,10 +22,12 @@
             <tr>
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
+                <th>Tanggal Selesai</th>
                 <th>Nama Pelapor</th>
                 <th>PIC</th>
                 <th>Kategori Masalah</th>
                 <th>Status</th>
+                <th>SLA</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -33,11 +35,22 @@
             @forelse ($laporanSelesai as $laporan)
             <tr>
                 <td>{{ $laporan->ticket_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d/m/y') }}</td>
+                <td>{{ $laporan->tanggal_selesai ? \Carbon\Carbon::parse($laporan->tanggal_selesai)->format('d/m/y') : '-' }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                 <td>{{ $laporan->pic->name ?? '-' }}</td>
                 <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
                 <td><span class="badge badge-success">{{ ucfirst($laporan->status) }}</span></td>
+                <td>
+                    <span class="badge 
+                @if($laporan->status_sla === 'Tepat Waktu') bg-success 
+                @elseif($laporan->status_sla === 'Terlambat') bg-danger 
+                @elseif($laporan->status_sla === 'Melewati Batas Waktu') bg-warning 
+                @else bg-secondary 
+                @endif">
+                        {{ $laporan->status_sla }}
+                    </span>
+                </td>
                 <td><a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a></td>
             </tr>
             @empty

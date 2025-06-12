@@ -35,6 +35,11 @@ class LaporanController extends Controller
 
         // Ambil hasil akhir
         $laporans = $query->latest()->paginate(10);
+
+        // Tambahkan logika SLA ke setiap laporan
+        foreach ($laporans as $laporan) {
+            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+        }
         // Return view sesuai dengan role user
         if ($user->role === 'pelapor') {
             return view('pelapor.laporanPelapor', compact('laporans'));
@@ -134,7 +139,13 @@ class LaporanController extends Controller
         if ($user->role == 'pelapor') {
             $query->where('pelapor_id', $user->id);
         }
+
         $laporanSelesai = $query->latest()->paginate(10);
+
+        // Tambahkan logika SLA ke setiap laporan
+        foreach ($laporanSelesai as $laporan) {
+            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+        }
         return view('template.laporanSelesai', compact('laporanSelesai'));
     }
 
@@ -170,6 +181,10 @@ class LaporanController extends Controller
         }
         $laporans = $query->latest()->paginate(10);
 
+        // Tambahkan logika SLA ke setiap laporan
+        foreach ($laporans as $laporan) {
+            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+        }
         return view('template.diproses', compact('laporans'));
     }
     public function close(Request $request, $id)
@@ -241,6 +256,10 @@ class LaporanController extends Controller
 
         $laporans = $query->latest()->paginate(10);
 
+        // Tambahkan logika SLA ke setiap laporan
+        foreach ($laporans as $laporan) {
+            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+        }
         return view('pelapor.riwayat', compact('laporans'));
     }
     public function ratingForm($id)
@@ -261,5 +280,50 @@ class LaporanController extends Controller
         $laporan->save();
 
         return redirect()->route('pelapor.riwayat')->with('success', 'Terima kasih atas penilaian Anda.');
+    }
+    private function hitungStatusSLA($laporan)
+    {
+        // Pastikan SLA dan tanggal selesai tersedia
+        if ($laporan->sla_close) {
+            $batasSLA = \Carbon\Carbon::parse($laporan->sla_close);
+
+            // Jika sudah selesai
+            if ($laporan->tanggal_selesai) {
+                $selesai = \Carbon\Carbon::parse($laporan->tanggal_selesai);
+                return $selesai->lessThanOrEqualTo($batasSLA) ? 'Tepat Waktu' : 'Terlambat';
+            }
+
+            // Jika belum selesai tapi sudah lewat SLA
+            if (now()->greaterThan($batasSLA)) {
+                return 'Melewati Batas Waktu';
+            }
+
+            // Masih dalam proses dan masih dalam waktu SLA
+            return 'Dalam Proses';
+        }
+
+        return 'Tidak Ditentukan';
+    }
+
+    public function knowledgeBase(Request $request)
+    {
+        $query = Laporan::with('kategori')
+            ->where('status', 'closed')
+            ->whereNotNull('catatan_selesai');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('ticket_number', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('kategori', function ($qKategori) use ($search) {
+                        // Ganti 'nama' sesuai nama kolom sebenarnya
+                        $qKategori->where('nama_kategori', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $laporans = $query->latest()->paginate(10);
+        return view('template.knowledge_base', compact('laporans'));
     }
 }

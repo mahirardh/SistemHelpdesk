@@ -5,11 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistem Helpdesk</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap JS (dengan Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{url ('plugins/fontawesome-free/css/all.min.css')}}">
@@ -17,8 +13,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="{{ asset('dist/img/Logo_PTPN4.png') }}" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap 5 JS (wajib untuk accordion bekerja) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @yield('css')
+    <style>
+        .accordion-body,
+        .accordion-body *,
+        .accordion-button {
+            color: #000 !important;
+            background-color: #fff !important;
+            opacity: 1 !important;
+            font-size: 1rem !important;
+            /* Tambahan biar teksnya kelihatan */
+            line-height: 1.5 !important;
+            /* Biar tinggi baris sesuai isi */
+            font-family: inherit !important;
+        }
+
+        /* Pastikan p tidak collapse tingginya */
+        .accordion-body p {
+            margin: 0.25rem 0 !important;
+            display: block !important;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -80,8 +101,8 @@
                  (auth()->user()->role === 'krani' ? route('krani.dashboard') : 
                   (auth()->user()->role === 'pelapor' ? route('pelapor.dashboard') : '#')) 
             }}" class="brand-link">
-            <img src="{{ asset('dist/img/Logo_PTPN4.png') }}" alt="Logo PTPN" class="brand-image img-circle elevation-3" style="opacity: .8; max-width: 60px; height: auto;">
-             <span class="brand-text font-weight-light">Sistem Helpdesk</span>
+                <img src="{{ asset('dist/img/Logo_PTPN4.png') }}" alt="Logo PTPN" class="brand-image img-circle elevation-3" style="opacity: .8; max-width: 60px; height: auto;">
+                <span class="brand-text font-weight-light">Sistem Helpdesk</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
@@ -115,6 +136,12 @@
                             <a href="{{ route('proses') }}" class="nav-link">
                                 <i class="nav-icon fas fa-spinner"></i>
                                 <p>Laporan Diproses</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('knowledge.base') }}" class="nav-link">
+                                <i class="fas fa-book"></i>
+                                <p>Knowledge Base</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -155,6 +182,12 @@
                                 <p>Laporan Diproses</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('knowledge.base') }}" class="nav-link">
+                                <i class="fas fa-book"></i>
+                                <p>Knowledge Base</p>
+                            </a>
+                        </li>
                         {{-- Krani tidak bisa tambah user --}}
 
                         @elseif(auth()->user()->role === 'pelapor')
@@ -164,27 +197,35 @@
                                 <p>Beranda</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('laporan.create') }}" class="nav-link">
                                 <i class="nav-icon fas fa-list-alt"></i>
                                 <p>Buat Laporan</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('totalLaporan') }}" class="nav-link">
                                 <i class="nav-icon fas fa-check-circle"></i>
                                 <p>Laporan Saya</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('pelapor.riwayat') }}" class="nav-link">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>Riwayat</p>
                             </a>
                         </li>
-                        {{-- Pelapor tidak bisa tambah user --}}
+
+                        <li class="nav-item">
+                            <a href="{{ route('knowledge.base') }}" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Knowledge Base</p>
+                            </a>
+                        </li>
                         @endif
-                    </ul>
                 </nav>
             </div>
         </aside>
@@ -200,7 +241,7 @@
     </div>
 
     <script src="{{url ('plugins/jquery/jquery.min.js')}}"></script>
-    <script src="{{url ('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <!-- <script src="{{url ('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script> -->
     <script src="{{url ('dist/js/adminlte.min.js')}}"></script>
     @yield('js')
     @stack('scripts')
