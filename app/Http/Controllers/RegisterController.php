@@ -21,10 +21,10 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:asisten,krani,pelapor',
+            // 'role' => 'required|in:asisten,krani,pelapor',
             'no_sap' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
-            'departemen' => 'required|string|max:100',
+            'departemen' => 'required',
         ]);
 
         User::create([

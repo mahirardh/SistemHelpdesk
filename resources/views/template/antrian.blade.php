@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">Antrian Laporan</h4>
-
+ <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Antrian Laporan</h1>
     <!-- Form Pencarian -->
     <form method="GET" action="#" disabled>
         <div class="row">

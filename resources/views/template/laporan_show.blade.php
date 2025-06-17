@@ -28,18 +28,18 @@
                         </div>
                         <div class="col-md-6">
                             <label><strong>No. HP</strong></label>
-                            <input type="text" class="form-control" value="{{ $laporan->phone }}" readonly>
+                            <input type="text" class="form-control" value="{{ $laporan->pelapor->no_hp }}" readonly>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label><strong>Email</strong></label>
-                            <input type="text" class="form-control" value="{{ $laporan->email }}" readonly>
+                            <input type="text" class="form-control" value="{{ $laporan->pelapor->email }}" readonly>
                         </div>
                         <div class="col-md-6">
                             <label><strong>Departemen</strong></label>
-                            <input type="text" class="form-control" value="{{ $laporan->department }}" readonly>
+                            <input type="text" class="form-control" value="{{ $laporan->pelapor->departemen }}" readonly>
                         </div>
                     </div>
 

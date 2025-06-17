@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container py-4">
-    <h4 class="mb-4 fw-bold">
-        <i class="fas fa-book"></i> Knowledge Base / Solusi Masalah Umum
+    <h4 class="mb-4 fw-bold" style="font-size: xx-large;">
+        <i class="nav-icon fas fa-book mr-2" ></i>Solusi Masalah Umum
     </h4>
 
     <form method="GET" class="mb-4">

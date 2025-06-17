@@ -41,7 +41,7 @@
 
 
                 {{-- Email & Telepon --}}
-                <div class="form-row">
+                <!-- <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="email" class="font-weight-bold">Email Pelapor</label>
                         <input type="email" name="email" class="form-control" placeholder="contoh@email.com" required>
@@ -50,11 +50,11 @@
                         <label for="phone" class="font-weight-bold">Nomor Telepon</label>
                         <input type="text" name="phone" class="form-control" placeholder="08xxxxxxxxxx" required>
                     </div>
-                </div>
+                </div> -->
 
                 {{-- Kategori & Departemen --}}
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-12">
                         <label for="kategori_id" class="font-weight-bold">Kategori Masalah</label>
                         <select name="kategori_id" class="form-control" required>
                             <option value="" disabled selected>-- Pilih Kategori --</option>
@@ -63,7 +63,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
+                    <!-- <div class="form-group col-md-6">
                         <label for="department" class="font-weight-bold">Departemen Pelapor</label>
                         <select name="department" class="form-control" required>
                             <option value="" disabled selected>-- Pilih Departemen --</option>
@@ -74,7 +74,7 @@
                             <option value="TI">TI</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
-                    </div>
+                    </div> -->
                 </div>
 
                 {{-- Deskripsi Masalah --}}

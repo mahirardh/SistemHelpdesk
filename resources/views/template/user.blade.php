@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">Daftar Pengguna</h4>
+    <h4 class="mb-4 font-weight-bold" style="font-size: xx-large;">Daftar Pengguna</h4>
 
     <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah Pengguna</a>
 

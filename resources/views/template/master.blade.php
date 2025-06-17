@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @yield('css')
-    <style>
+    <!-- <style>
         .accordion-body,
         .accordion-body *,
         .accordion-button {
@@ -39,7 +39,7 @@
             margin: 0.25rem 0 !important;
             display: block !important;
         }
-    </style>
+    </style> -->
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -47,7 +47,7 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars ml-2"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="../../index3.html" class="nav-link">Home</a>
@@ -56,9 +56,9 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Icon Profile -->
-                <li class="nav-item">
+                <li class="nav-item mr-4">
                     <a href="{{ route('profile.show') }}" class="nav-link">
-                        <i class="fas fa-user"></i> Profile
+                        <i class="nav-icon fas fa-user"></i> Profile
                     </a>
 
                 </li>
@@ -67,8 +67,8 @@
                 <li class="nav-item">
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="nav-link btn btn-link" style="padding: 0; color: inherit;">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                        <button type="submit" class="nav-link btn btn-link mr-4" style="padding: 0; color: inherit;">
+                            <i class="nav-icon fas fa-sign-out-alt"></i> Logout
                         </button>
                     </form>
                 </li>
@@ -140,7 +140,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('knowledge.base') }}" class="nav-link">
-                                <i class="fas fa-book"></i>
+                                <i class="nav-icon fas fa-book"></i>
                                 <p>Knowledge Base</p>
                             </a>
                         </li>
@@ -184,7 +184,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('knowledge.base') }}" class="nav-link">
-                                <i class="fas fa-book"></i>
+                                <i class="nav-icon fas fa-book"></i>
                                 <p>Knowledge Base</p>
                             </a>
                         </li>

@@ -8,6 +8,8 @@ use App\Models\Laporan;
 use App\Models\Kategori;
 use App\Models\User;
 use App\Models\Timeline;
+use App\Mail\LaporanSelesaiMail as MailLapor;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -56,10 +58,10 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email'       => 'required|email',
-            'phone'       => 'required',
+            // 'email'       => 'required|email',
+            // 'phone'       => 'required',
             'kategori_id' => 'required|exists:kategoris,id',
-            'department'  => 'required',
+            // 'department'  => 'required',
             'description' => 'required',
             'attachment'  => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
@@ -71,10 +73,10 @@ class LaporanController extends Controller
 
         Laporan::create([
             'ticket_number' => 'TKT-' . strtoupper(Str::random(6)),
-            'email'         => $request->email,
-            'phone'         => $request->phone,
+            // 'email'         => $request->email,
+            // 'phone'         => $request->phone,
             'kategori_id'   => $request->kategori_id,
-            'department'    => $request->department,
+            // 'department'    => $request->department,
             'description'   => $request->description,
             'status'        => 'open',
             'pelapor_id'    => Auth::id(), // ambil dari user yang sedang login
@@ -116,7 +118,10 @@ class LaporanController extends Controller
         $laporan->sla_close = $request->sla_close;
         $laporan->prioritas = $request->prioritas;
         $laporan->save();
-
+        // Kirim email jika status diubah menjadi 'closed'
+        if ($laporan->status == 'closed') {
+            Mail::to($laporan->pelapor->email)->queue(new MailLapor($laporan));
+        }
 
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }

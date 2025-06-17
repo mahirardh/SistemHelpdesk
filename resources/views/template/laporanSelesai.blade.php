@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">Laporan Selesai</h4>
-
+ <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Laporan Selesai</h1>
     <!-- Form Pencarian -->
     <form method="GET" action="{{ route('laporanSelesai') }}">
         <div class="row mb-3">

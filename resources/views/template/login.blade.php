@@ -28,6 +28,7 @@
             margin-bottom: 30px;
         }
     </style>
+    <link rel="icon" href="{{ asset('dist/img/Logo_PTPN4.png') }}" type="image/png">
 </head>
 
 <body>
