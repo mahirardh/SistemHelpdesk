@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4">
     <h4 class="mb-4 fw-bold" style="font-size: xx-large;">
-        <i class="nav-icon fas fa-book mr-2" ></i>Solusi Masalah Umum
+        <i class="nav-icon fas fa-book mr-2"></i>Solusi Masalah Umum
     </h4>
 
     <form method="GET" class="mb-4">
@@ -30,7 +30,14 @@
             </div>
             <div class="faq-answer mt-3" style="display: none;">
                 <p class="mb-2"><strong>Masalah:</strong><br>{{ $laporan->description }}</p>
-                <p class="mb-0"><strong>Solusi:</strong><br>{{ $laporan->catatan_selesai }}</p>
+                <p class="mb-2"><strong>Solusi:</strong><br>{{ $laporan->catatan_selesai }}</p>
+
+                @if (!empty($laporan->attachment))
+                <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank"
+                    class="btn btn-dark btn-sm mt-2 d-inline-flex align-items-center gap-1">
+                    <i class="fas fa-paperclip"></i> Lihat Lampiran
+                </a>
+                @endif
             </div>
         </div>
         @endforeach

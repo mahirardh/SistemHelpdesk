@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
- <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Laporan Sedang Diproses</h1>
+    <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Laporan Sedang Diproses</h1>
     <!-- Form Pencarian (tidak aktif) -->
     <form method="GET" action="#" disabled>
         <div class="row">
@@ -40,8 +40,12 @@
                     <span class="badge badge-info">{{ ucfirst(str_replace('_', ' ', $laporan->status)) }}</span>
                 </td>
                 <td>
-                    <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a>
-                    <!-- <button class="btn btn-sm btn-outline-secondary" disabled>Status: {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}</button> -->
+                    <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">
+                        <i class="fas fa-eye"></i> Detail
+                    </a>
+                    <a href="{{ route('laporan.edit', $laporan->id) }}" class="btn btn-sm btn-dark">
+                        <i class="fas fa-reply"></i> Respon
+                    </a>
                 </td>
             </tr>
             @empty
