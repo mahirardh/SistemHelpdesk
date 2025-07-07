@@ -84,10 +84,12 @@
                 </div>
 
                 {{-- File Pendukung --}}
-                <div class="form-group">
-                    <label for="attachment" class="font-weight-bold">File Pendukung (Opsional)</label>
-                    <input type="file" name="attachment" class="form-control-file">
+                <div class="mb-3">
+                    <label for="attachment" class="form-label fw-bold">Lampiran (PDF / Gambar)</label>
+                    <input type="file" name="attachment" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" required>
+                    <small class="form-text text-muted">Maksimal 20MB.</small>
                 </div>
+
 
                 {{-- Tombol Aksi --}}
                 <div class="form-group d-flex justify-content-end">
@@ -99,7 +101,85 @@
                     </button>
                 </div>
             </form>
+            <!-- Modal Preview -->
+            <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Preview File</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img id="previewImage" class="img-fluid d-none" />
+                            <iframe id="previewPdf" class="w-100" style="height: 500px;" hidden></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.querySelector('input[name="attachments[]"]');
+        fileInput.addEventListener('change', function() {
+            Array.from(fileInput.files).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File "${file.name}" melebihi ukuran 5MB.`);
+                    fileInput.value = ""; // clear input
+                }
+            });
+        });
+
+        document.querySelectorAll('.file-preview-trigger').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const isPdf = url.toLowerCase().endsWith(".pdf");
+
+                if (isPdf) {
+                    document.getElementById('previewImage').classList.add('d-none');
+                    document.getElementById('previewPdf').hidden = false;
+                    document.getElementById('previewPdf').src = url;
+                } else {
+                    document.getElementById('previewPdf').hidden = true;
+                    const img = document.getElementById('previewImage');
+                    img.src = url;
+                    img.classList.remove('d-none');
+                }
+
+                $('#previewModal').modal('show');
+            });
+        });
+    });
+</script>
+@endsection
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.querySelector('input[name="attachments[]"]');
+        const MAX_SIZE_MB = 20; // batas maksimal 20 MB
+        const MAX_SIZE = MAX_SIZE_MB * 1024 * 1024;
+
+        fileInput.addEventListener('change', function() {
+            const files = fileInput.files;
+            let oversizedFiles = [];
+
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > MAX_SIZE) {
+                    oversizedFiles.push(`${files[i].name} (${(files[i].size / 1024 / 1024).toFixed(2)} MB)`);
+                }
+            }
+
+            if (oversizedFiles.length > 0) {
+                alert("File berikut melebihi batas maksimum " + MAX_SIZE_MB + " MB:\n\n" + oversizedFiles.join("\n"));
+                fileInput.value = ""; // hapus semua file yang sudah dipilih
+            }
+        });
+    });
+</script>
 @endsection

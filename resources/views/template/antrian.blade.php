@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
- <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Antrian Laporan</h1>
+    <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Antrian Laporan</h1>
     <!-- Form Pencarian -->
     <form method="GET" action="#" disabled>
         <div class="row">
@@ -18,7 +18,7 @@
     <!-- Tabel Antrian -->
     <table class="table table-bordered mt-4">
         <thead class="thead-dark">
-            <tr>
+            <tr class="text-center">
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
                 <th>Nama Pelapor</th>
@@ -29,7 +29,7 @@
         </thead>
         <tbody>
             @forelse ($laporans as $laporan)
-            <tr>
+            <tr class="text-center">
                 <td>{{ $laporan->ticket_number }}</td>
                 <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>

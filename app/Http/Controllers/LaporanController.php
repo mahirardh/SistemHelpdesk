@@ -63,13 +63,10 @@ class LaporanController extends Controller
             'kategori_id' => 'required|exists:kategoris,id',
             // 'department'  => 'required',
             'description' => 'required',
-            'attachment'  => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'attachment'  => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:20480',
         ]);
 
-        $attachmentPath = null;
-        if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
-        }
+        $path = $request->file('attachment')->store('attachments', 'public');
 
         Laporan::create([
             'ticket_number' => 'TKT-' . strtoupper(Str::random(6)),
@@ -80,7 +77,7 @@ class LaporanController extends Controller
             'description'   => $request->description,
             'status'        => 'open',
             'pelapor_id'    => Auth::id(), // ambil dari user yang sedang login
-            'attachment'    => $attachmentPath,
+            'attachment'    => $path,
         ]);
 
         return redirect()->route('laporan.index')->with('success', 'Laporan berhasil ditambahkan.');
@@ -101,10 +98,11 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($id);
 
         $request->validate([
-            'status'      => 'required|in:open,in_progress,closed',
-            'pic_id'      => 'nullable|exists:users,id',
-            'sla_close'   => 'nullable|date',
-            'prioritas'   => 'nullable|in:rendah,sedang,tinggi', // pastikan lowercase sesuai DB
+            'status'            => 'required|in:open,in_progress,closed',
+            'pic_id'            => 'nullable|exists:users,id',
+            'sla_close'         => 'nullable|date',
+            'prioritas'         => 'nullable|in:rendah,sedang,tinggi',
+            'catatan_selesai'   => 'nullable|string',
         ]);
 
         // Jika status baru adalah 'in_progress' dan sebelumnya belum di-set, isi tanggal_mulai
@@ -112,19 +110,28 @@ class LaporanController extends Controller
             $laporan->tanggal_mulai = now();
         }
 
-        // Tetap update kolom lain
-        $laporan->status    = $request->status;
-        $laporan->pic_id    = $request->pic_id;
-        $laporan->sla_close = $request->sla_close;
-        $laporan->prioritas = $request->prioritas;
-        $laporan->save();
-        // Kirim email jika status diubah menjadi 'closed'
-        if ($laporan->status == 'closed') {
+        // Tetap update kolom utama
+        $laporan->status        = $request->status;
+        $laporan->pic_id        = $request->pic_id;
+        $laporan->sla_close     = $request->sla_close;
+        $laporan->prioritas     = $request->prioritas;
+
+        // Selalu update catatan & checkbox KB jika status ditutup
+        if ($request->status === 'closed') {
+            $laporan->catatan_selesai = $request->input('catatan_selesai');
+            $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb') ? true : false;
+
             Mail::to($laporan->pelapor->email)->queue(new MailLapor($laporan));
+        } else {
+            // Jika status bukan closed, pastikan flag KB diset ulang ke false
+            $laporan->tampilkan_di_kb = false;
         }
+
+        $laporan->save();
 
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }
+
 
     public function selesai(Request $request)
     {
@@ -212,6 +219,7 @@ class LaporanController extends Controller
         $laporan->catatan_selesai = $request->catatan_selesai;
         $laporan->status = 'closed';
         $laporan->tanggal_selesai = now(); // ✅ tambahkan ini juga
+        $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb') ? 1 : 0;
         $laporan->save();
 
 
@@ -224,8 +232,9 @@ class LaporanController extends Controller
         return response()->json([
             'created_at'      => $laporan->created_at,
             'tanggal_mulai'   => $laporan->tanggal_mulai,
-            'updated_at'      => $laporan->updated_at,
-            'tanggal_selesai' => $laporan->tanggal_selesai,           // waktu laporan selesai/close
+            'tanggal_selesai' => $laporan->tanggal_selesai,  // waktu laporan selesai/close
+            'nama_pic' => $laporan->pic->name ?? null,
+            'catatan_selesai' => $laporan->catatan_selesai ?? null,
         ]);
     }
 
@@ -314,7 +323,8 @@ class LaporanController extends Controller
     {
         $query = Laporan::with('kategori')
             ->where('status', 'closed')
-            ->whereNotNull('catatan_selesai');
+            ->whereNotNull('catatan_selesai')
+            ->where('tampilkan_di_kb', true);
 
         if ($request->filled('search')) {
             $search = $request->search;

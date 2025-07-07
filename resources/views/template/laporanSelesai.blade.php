@@ -18,7 +18,7 @@
     <!-- Tabel Laporan Selesai -->
     <table class="table table-bordered mt-4">
         <thead class="thead-dark">
-            <tr>
+            <tr class="text-center">
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
                 <th>Tanggal Selesai</th>
@@ -32,7 +32,7 @@
         </thead>
         <tbody>
             @forelse ($laporanSelesai as $laporan)
-            <tr>
+            <tr class="text-center">
                 <td>{{ $laporan->ticket_number }}</td>
                 <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d/m/y') }}</td>
                 <td>{{ $laporan->tanggal_selesai ? \Carbon\Carbon::parse($laporan->tanggal_selesai)->format('d/m/y') : '-' }}</td>
@@ -61,8 +61,8 @@
     </table>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-center">
-        {{ $laporanSelesai->withQueryString()->links() }}
+    <div class="d-flex justify-content-end">
+        {{ $laporanSelesai->withQueryString()->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Departemen;
 
 class UserController extends Controller
 {
@@ -16,37 +17,34 @@ class UserController extends Controller
     }
     public function create()
     {
-        return view('template.user_create');
+        $departemens = Departemen::all();
+        return view('template.user_create', compact('departemens'));
     }
 
     // Menyimpan user baru
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|string|min:6',
-                'role' => 'required|in:asisten,krani,pelapor',
-                'no_sap' => 'required|string|max:255',
-                'no_hp' => 'nullable|string|max:15',
-                'departemen' => 'nullable|string|max:100',
-            ]);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6',
+            'no_sap' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
+            'departemen' => 'required|string',
+            'role' => 'required|in:asisten,krani,pelapor',
+        ]);
 
-            User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-                'role' => $validated['role'],
-                'no_sap' => $validated['no_sap'],
-                'no_hp' => $validated['no_hp'],
-                'departemen' => $validated['departemen'],
-            ]);
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'no_sap' => $validated['no_sap'],
+            'no_hp' => $validated['no_hp'],
+            'departemen' => $validated['departemen'],
+            'role' => $validated['role'],
+        ]);
 
-            return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menambahkan pengguna. Alasan: ' . $e->getMessage());
-        }
+        return redirect()->route('users.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     public function show($id)

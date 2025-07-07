@@ -33,10 +33,11 @@
                 <p class="mb-2"><strong>Solusi:</strong><br>{{ $laporan->catatan_selesai }}</p>
 
                 @if (!empty($laporan->attachment))
-                <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank"
-                    class="btn btn-dark btn-sm mt-2 d-inline-flex align-items-center gap-1">
+                <button type="button"
+                        class="btn btn-dark btn-sm mt-2 file-preview-trigger"
+                        data-url="{{ asset('storage/' . $laporan->attachment) }}">
                     <i class="fas fa-paperclip"></i> Lihat Lampiran
-                </a>
+                </button>
                 @endif
             </div>
         </div>
@@ -51,6 +52,23 @@
     @endif
 </div>
 
+<!-- Modal Preview Lampiran (Shared by all items) -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="previewImage" class="img-fluid d-none" />
+                <iframe id="previewPdf" class="w-100" style="height: 500px;" hidden></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script Toggle Jawaban -->
 <script>
     function toggleAnswer(element) {
         const answer = element.nextElementSibling;
@@ -65,5 +83,34 @@
             icon.classList.add('fa-chevron-down');
         }
     }
+</script>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.file-preview-trigger').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const isPdf = url.toLowerCase().endsWith(".pdf");
+
+                const img = document.getElementById('previewImage');
+                const pdf = document.getElementById('previewPdf');
+
+                if (isPdf) {
+                    img.classList.add('d-none');
+                    pdf.hidden = false;
+                    pdf.src = url;
+                } else {
+                    pdf.hidden = true;
+                    img.src = url;
+                    img.classList.remove('d-none');
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+                modal.show();
+            });
+        });
+    });
 </script>
 @endsection

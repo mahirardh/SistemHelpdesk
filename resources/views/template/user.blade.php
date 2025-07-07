@@ -16,7 +16,7 @@
 
     <table class="table table-bordered table-striped mt-2">
         <thead class="thead-dark">
-            <tr>
+            <tr class="text-center">
                 <th>No</th>
                 <th>No. SAP</th>
                 <th>Nama</th>
@@ -29,15 +29,15 @@
         </thead>
         <tbody>
             @forelse ($users as $user)
-            <tr>
-                <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
+            <tr >
+                <td class="text-center">{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                 <td>{{ $user->no_sap }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td><span class="badge badge-secondary">{{ ucfirst($user->role) }}</span></td>
                 <td>{{ $user->no_hp }}</td>
                 <td>{{ $user->departemen }}</td>
-                <td>
+                <td class="text-center">
                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-info">Detail</a>
                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">

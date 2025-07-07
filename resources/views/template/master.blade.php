@@ -245,6 +245,7 @@
     <script src="{{url ('dist/js/adminlte.min.js')}}"></script>
     @yield('js')
     @stack('scripts')
+    @yield('scripts')
 </body>
 
 </html>

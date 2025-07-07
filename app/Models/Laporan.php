@@ -26,8 +26,14 @@ class Laporan extends Model
         'pic_id',
         'sla_close',
         'prioritas',
-        'user_confirmed'
+        'user_confirmed',
+        'catatan_selesai',
+        'tampilkan_di_kb',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'rating'
     ];
+
     protected $casts = [
         'created_at' => 'datetime',
         'processed_at' => 'datetime',

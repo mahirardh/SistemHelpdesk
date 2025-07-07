@@ -136,6 +136,13 @@
                 <div class="modal-body">
                     <textarea name="catatan_selesai" class="form-control" rows="4" required></textarea>
                 </div>
+                <div class="form-group mt-2">
+                    <label>
+                        <input type="checkbox" name="tampilkan_di_kb" value="1"
+                            {{ $laporan->tampilkan_di_kb ? 'checked' : '' }}>
+                        Tampilkan solusi ini di Knowledge Base
+                    </label>
+                </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

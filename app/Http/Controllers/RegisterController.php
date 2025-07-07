@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Departemen;
 
 class RegisterController extends Controller
 {
     // Tampilkan form register
     public function showRegistrationForm()
     {
-        return view('template.register');  // sesuaikan folder dan nama file blade kamu
+        $departemens = Departemen::all(); // ambil semua data departemen
+        return view('template.register', compact('departemens'));
     }
 
     // Proses registrasi

@@ -2,13 +2,48 @@
 <html lang="en">
 
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Register - Sistem Helpdesk</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery (wajib untuk Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        /* Styling tambahan agar select2 enak dilihat */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 24px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+            right: 10px;
+        }
+
+        .select2-container .select2-dropdown {
+            color: #333;
+            background-color: #fff;
+        }
+    </style>
     <style>
         body {
-            background-color: #f7f7f7;
+            background-color:  #f7f7f7;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -31,6 +66,16 @@
         .form-group small {
             color: red;
         }
+
+        /* Warna teks pilihan */
+        .select2-container--default .select2-selection--single {
+            color: #333 !important;
+            /* warna teks */
+            background-color: #fff !important;
+            /* latar belakang */
+            border: 1px solid #ccc !important;
+            /* border agar jelas */
+        }
     </style>
     <link rel="icon" href="{{ asset('dist/img/Logo_PTPN4.png') }}" type="image/png">
 </head>
@@ -41,13 +86,13 @@
         <hr />
 
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $err)
+                <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <form action="{{ route('register') }}" method="POST" novalidate>
@@ -79,14 +124,13 @@
 
             <div class="form-group">
                 <label>Departemen</label>
-                <select name="departemen" class="form-control" required>
+                <select name="departemen" id="departemen" class="form-control" required>
                     <option value="" disabled selected>-- Pilih Departemen --</option>
-                    <option value="HRD" {{ old('departemen') == 'HRD' ? 'selected' : '' }}>HRD</option>
-                    <option value="Keuangan" {{ old('departemen') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
-                    <option value="Produksi" {{ old('departemen') == 'Produksi' ? 'selected' : '' }}>Produksi</option>
-                    <option value="Logistik" {{ old('departemen') == 'Logistik' ? 'selected' : '' }}>Logistik</option>
-                    <option value="TI" {{ old('departemen') == 'TI' ? 'selected' : '' }}>TI</option>
-                    <option value="Lainnya" {{ old('departemen') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    @foreach ($departemens as $dept)
+                    <option value="{{ $dept->nama_departemen }}" {{ old('departemen') == $dept->nama_departemen ? 'selected' : '' }}>
+                        {{ $dept->nama_departemen }}
+                    </option>
+                    @endforeach
                 </select>
                 @error('departemen') <small>{{ $message }}</small> @enderror
             </div>
@@ -111,6 +155,18 @@
             <a href="{{ route('login') }}" class="btn btn-default">Kembali ke Login</a>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#departemen').select2({
+                placeholder: "-- Pilih Departemen --",
+                allowClear: true,
+                width: '100%' // biar tetap responsif
+            });
+        });
+    </script>
+
 </body>
 
 </html>

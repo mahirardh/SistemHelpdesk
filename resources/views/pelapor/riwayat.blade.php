@@ -49,11 +49,11 @@
                     <td>{{ $laporan->tanggal_selesai ? \Carbon\Carbon::parse($laporan->tanggal_selesai)->format('d/m/y') : '-' }}</td>
                     <td>
                         @if($laporan->status === 'closed' && !$laporan->user_confirmed)
-                        <a href="{{ route('laporan.ratingForm', $laporan->id) }}" class="btn btn-sm btn-success">Respon</a>
+                        <a href="{{ route('laporan.ratingForm', $laporan->id) }}" class="btn btn-sm btn-primary">Respon</a>
                         @elseif($laporan->user_confirmed)
                         <span class="badge bg-success px-3 py-2">Selesai</span>
                         @else
-                        <span class="badge bg-secondary px-3 py-2">Menunggu</span>
+                        <span class="badge bg-warning text-dark px-3 py-2">Menunggu</span>
                         @endif
                     </td>
                     <td>
