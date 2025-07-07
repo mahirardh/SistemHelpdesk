@@ -14,7 +14,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Panggil seeder kategori
-        $this->call(KategoriSeeder::class);
+        $this->call([
+        DepartemenSeeder::class,
+        KategoriSeeder::class,
+    ]);
 
         // Contoh jika ingin membuat user secara otomatis
         // User::factory(10)->create();
