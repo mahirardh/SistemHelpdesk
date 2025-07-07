@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('reporter_name');
             $table->string('attachment')->nullable();
             $table->string('catatan_selesai')->nullable();
+            $table->boolean('tampilkan_di_kb')->default(false);
             $table->unsignedBigInteger('kategori_id')->nullable();
             $table->unsignedBigInteger('pelapor_id')->nullable();
             $table->unsignedBigInteger('pic_id')->nullable();
