@@ -15,10 +15,10 @@ class Laporan extends Model
 
     protected $fillable = [
         'ticket_number',
-        'email',
-        'phone',
+        // 'email',
+        // 'phone',
         'kategori_id',
-        'department',
+        // 'department',
         'description',
         'status',
         'pelapor_id',
