@@ -11,6 +11,7 @@ use App\Models\Timeline;
 use App\Mail\LaporanSelesaiMail as MailLapor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 // use PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -117,15 +118,30 @@ class LaporanController extends Controller
         $laporan->sla_close     = $request->sla_close;
         $laporan->prioritas     = $request->prioritas;
 
-        // Selalu update catatan & checkbox KB jika status ditutup
+        // // Selalu update catatan & checkbox KB jika status ditutup
+        // if ($request->status === 'closed') {
+        //     $laporan->catatan_selesai = $request->input('catatan_selesai');
+        //     $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb') ? true : false;
+
+        //     Mail::to($laporan->pelapor->email)->queue(new MailLapor($laporan));
+        // } else {
+        //     // Jika status bukan closed, pastikan flag KB diset ulang ke false
+        //     $laporan->tampilkan_di_kb = false;
+        // }
         if ($request->status === 'closed') {
             $laporan->catatan_selesai = $request->input('catatan_selesai');
-            $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb') ? true : false;
+
+            // Cek apakah kolom tampilkan_di_kb ada sebelum diakses
+            if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
+                $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb');
+            }
 
             Mail::to($laporan->pelapor->email)->queue(new MailLapor($laporan));
         } else {
-            // Jika status bukan closed, pastikan flag KB diset ulang ke false
-            $laporan->tampilkan_di_kb = false;
+            // Reset tampilkan_di_kb jika kolomnya ada
+            if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
+                $laporan->tampilkan_di_kb = false;
+            }
         }
 
         $laporan->save();
