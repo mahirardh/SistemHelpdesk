@@ -12,16 +12,20 @@ return new class extends Migration
     public function up()
     {
         Schema::table('laporans', function (Blueprint $table) {
-            // HAPUS atau KOMENTAR baris-baris ini karena kolomnya SUDAH ADA:
-            // $table->text('catatan_selesai')->nullable()->after('status');
-            // $table->boolean('tampilkan_di_kb')->default(false)->after('catatan_selesai');
+            if (!Schema::hasColumn('laporans', 'catatan_selesai')) {
+                $table->text('catatan_selesai')->nullable()->after('status');
+            }
+
+            if (!Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
+                $table->boolean('tampilkan_di_kb')->default(false)->after('catatan_selesai');
+            }
         });
     }
-
 
     public function down()
     {
         Schema::table('laporans', function (Blueprint $table) {
+            $table->dropColumn('catatan_selesai');
             $table->dropColumn('tampilkan_di_kb');
         });
     }
