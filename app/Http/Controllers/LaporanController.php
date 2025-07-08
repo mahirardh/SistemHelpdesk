@@ -10,8 +10,9 @@ use App\Models\User;
 use App\Models\Timeline;
 use App\Mail\LaporanSelesaiMail as MailLapor;
 use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Support\Facades\Auth;
+// use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
@@ -340,5 +341,30 @@ class LaporanController extends Controller
 
         $laporans = $query->latest()->paginate(10);
         return view('template.knowledge_base', compact('laporans'));
+    }
+
+
+    public function exportRekapSLA(Request $request)
+    {
+        $user = Auth::user();
+        $start = $request->start;
+        $end = $request->end;
+
+        $query = Laporan::with(['kategori', 'pelapor.departemen', 'pic'])
+            ->whereBetween('created_at', [$start, $end]);
+
+        // 🔐 Filter berdasarkan role user login
+        if ($user->role === 'krani' || $user->role === 'pic') {
+            $query->where('pic_id', $user->id);
+        }
+
+        $laporans = $query->get();
+
+        foreach ($laporans as $laporan) {
+            $laporan->sla_status = $this->hitungStatusSLA($laporan);
+        }
+
+        $pdf = PDF::loadView('laporan.sla-rekap-pdf', compact('laporans', 'start', 'end', 'user'));
+        return $pdf->download("Rekap-SLA-$start-sampai-$end.pdf");
     }
 }

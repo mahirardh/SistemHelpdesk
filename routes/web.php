@@ -94,5 +94,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/knowledge-base', [LaporanController::class, 'knowledgeBase'])->name('knowledge.base');
 
+    Route::get('/rekap-sla/export', [LaporanController::class, 'exportRekapSLA'])->name('laporan.export.sla');
+
 });
 

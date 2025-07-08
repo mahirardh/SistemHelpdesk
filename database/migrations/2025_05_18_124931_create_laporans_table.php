@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('laporans', function (Blueprint $table) {
             $table->id();
             $table->string('ticket_number')->unique();
-            $table->string('email');
-            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->string('category');
             $table->string('department')->nullable();
             $table->text('description');

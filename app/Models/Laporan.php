@@ -60,4 +60,9 @@ class Laporan extends Model
     {
         return $this->hasMany(Timeline::class);
     }
+    public function departemen()
+{
+    return $this->belongsTo(Departemen::class, 'department_id');
+}
+
 }

@@ -48,8 +48,14 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Laporan::class, 'pelapor_id');
     }
 
+
     public function laporanPIC()
     {
         return $this->hasMany(\App\Models\Laporan::class, 'pic_id');
+    }
+
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class, 'departemen_id');
     }
 }
