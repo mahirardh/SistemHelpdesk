@@ -8,18 +8,37 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $totalLaporan   = Laporan::count();
-        $totalSelesai   = Laporan::where('status', 'closed')->count();
-        $totalAntrian   = Laporan::where('status', 'open')->count();
-        $totalDiproses  = Laporan::where('status', 'in_progress')->count();
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
 
-        $laporanPerPIC = User::withCount(['laporanPIC as laporan_pic_count' => function ($query) {
-            $query->where('status', 'in_progress');
-        }])
-            ->whereHas('laporanPIC', function ($query) {
+        $start = $startDate ? $startDate . ' 00:00:00' : null;
+        $end   = $endDate   ? $endDate . ' 23:59:59' : null;
+
+        $baseQuery = Laporan::query();
+        if ($start && $end) {
+            $baseQuery->whereBetween('created_at', [$start, $end]);
+        }
+
+        $totalLaporan  = (clone $baseQuery)->count();
+        $totalSelesai  = (clone $baseQuery)->where('status', 'closed')->count();
+        $totalAntrian  = (clone $baseQuery)->where('status', 'open')->count();
+        $totalDiproses = (clone $baseQuery)->where('status', 'in_progress')->count();
+
+        $laporanPerPIC = User::withCount([
+            'laporanPIC as laporan_pic_count' => function ($query) use ($start, $end) {
                 $query->where('status', 'in_progress');
+                if ($start && $end) {
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
+            }
+        ])
+            ->whereHas('laporanPIC', function ($query) use ($start, $end) {
+                $query->where('status', 'in_progress');
+                if ($start && $end) {
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
             })
             ->get();
 
@@ -28,7 +47,9 @@ class DashboardController extends Controller
             'totalSelesai',
             'totalAntrian',
             'totalDiproses',
-            'laporanPerPIC'
+            'laporanPerPIC',
+            'startDate',
+            'endDate'
         ));
     }
 }

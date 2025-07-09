@@ -55,7 +55,7 @@
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                 <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
                 <td>{{ $laporan->description }}</td>
-                <td>{{ $laporan->sla_close ? \Carbon\Carbon::parse($laporan->sla_close)->format('d-m-Y H:i') : '-' }}</td>
+                <td>{{ $laporan->sla_close ? \Carbon\Carbon::parse($laporan->sla_close)->format('d-m-Y') : '-' }}</td>
                 <td>{{ $laporan->pic->name ?? '-' }}</td>
                 <td>{{ $laporan->sla_status }}</td>
             </tr>

@@ -4,6 +4,20 @@
 <div class="container-fluid">
     <h4 class="mb-4 font-weight-bold">BERANDA KRANI </h4>
 
+    <form method="GET" class="form-inline mb-4">
+        <label class="mr-2">Dari:</label>
+        <input type="date" name="start_date" class="form-control mr-3" value="{{ $startDate }}">
+        <label class="mr-2">Sampai:</label>
+        <input type="date" name="end_date" class="form-control mr-3" value="{{ $endDate }}">
+        <button type="submit" class="btn btn-primary">Terapkan</button>
+    </form>
+
+    @if ($startDate && $endDate)
+    <div class="alert alert-info">
+        Menampilkan laporan dari <strong>{{ $startDate }}</strong> sampai <strong>{{ $endDate }}</strong>.
+    </div>
+    @endif
+
     <div class="row">
         <div class="col-md-3">
             <div class="small-box bg-light">
