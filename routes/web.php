@@ -11,6 +11,8 @@ use App\Livewire\Krani\Dashboard;
 use App\Http\Controllers\KraniController;
 use App\Http\Controllers\AsistenController;
 use App\Http\Controllers\PelaporController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifikasiEmail;
 
 // Routing login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -96,5 +98,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/rekap-sla/export', [LaporanController::class, 'exportRekapSLA'])->name('laporan.export.sla');
 
+    Route::get('/tes-email', function () {
+    $laporan = \App\Models\Laporan::latest()->first(); // ambil laporan terakhir
+    try {
+        Mail::to('emailtujuan@example.com')->send(new NotifikasiEmail($laporan));
+        return "Email berhasil dikirim.";
+    } catch (\Exception $e) {
+        return "Gagal kirim email: " . $e->getMessage();
+    }
+});
 });
 

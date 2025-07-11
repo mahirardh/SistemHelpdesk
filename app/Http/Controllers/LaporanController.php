@@ -9,11 +9,13 @@ use App\Models\Kategori;
 use App\Models\User;
 use App\Models\Timeline;
 use App\Mail\LaporanSelesaiMail as MailLapor;
+use App\Mail\NotifikasiEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 // use PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 
 class LaporanController extends Controller
 {
@@ -104,7 +106,7 @@ class LaporanController extends Controller
             'pic_id'            => 'nullable|exists:users,id',
             'sla_close'         => 'nullable|date',
             'prioritas'         => 'nullable|in:rendah,sedang,tinggi',
-            'catatan_selesai'   => 'nullable|string',
+            // 'catatan_selesai'   => 'nullable|string',
         ]);
 
         // Jika status baru adalah 'in_progress' dan sebelumnya belum di-set, isi tanggal_mulai
@@ -128,24 +130,34 @@ class LaporanController extends Controller
         //     // Jika status bukan closed, pastikan flag KB diset ulang ke false
         //     $laporan->tampilkan_di_kb = false;
         // }
-        if ($request->status === 'closed') {
-            $laporan->catatan_selesai = $request->input('catatan_selesai');
+        //    dd($request->status);
+        // if ($request->status === 'closed') {
+        //     dd('Masuk sini',$laporan->pelapor->email);
 
-            // Cek apakah kolom tampilkan_di_kb ada sebelum diakses
-            if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
-                $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb');
-            }
+        //     $laporan->catatan_selesai = $request->input('catatan_selesai');
 
-            Mail::to($laporan->pelapor->email)->queue(new MailLapor($laporan));
-        } else {
-            // Reset tampilkan_di_kb jika kolomnya ada
-            if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
-                $laporan->tampilkan_di_kb = false;
-            }
+        //     // Cek apakah kolom tampilkan_di_kb ada sebelum diakses
+        //     if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
+        //         $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb');
+        //     }
+        //     try {
+
+        //         Mail::to($laporan->pelapor->email)->send(new NotifikasiEmail($laporan));
+        //         $laporan->save();
+        //         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui dan notifikasi email berhasil dikirim.');
+        //     } catch (Exception $e) {
+        //         $laporan->save();
+        //         return redirect()->route('laporan.index')->with('warning', 'Status laporan berhasil diperbarui, tetapi email gagal dikirim. Error: ' . $e->getMessage());
+        //     }
+        // } else {
+        // Reset tampilkan_di_kb jika kolomnya ada
+        // if (Schema::hasColumn('laporans', 'tampilkan_di_kb')) {
+        //     $laporan->tampilkan_di_kb = false;
+        // }
+        if (Schema::hasColumn('laporans', 'tampilkan_di_kb') && $request->status !== 'closed') {
+            $laporan->tampilkan_di_kb = false;
         }
-
         $laporan->save();
-
         return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui.');
     }
 
@@ -239,8 +251,15 @@ class LaporanController extends Controller
         $laporan->tampilkan_di_kb = $request->has('tampilkan_di_kb') ? 1 : 0;
         $laporan->save();
 
+        try {
+            Mail::to($laporan->pelapor->email)->send(new NotifikasiEmail($laporan));
 
-        return redirect()->route('laporan.index')->with('success', 'Laporan ditutup dengan catatan.');
+            $laporan->save();
+            return redirect()->route('laporan.index')->with('success', 'Laporan ditutup dan email notifikasi berhasil dikirim.');
+        } catch (Exception $e) {
+            $laporan->save();
+            return redirect()->route('laporan.index')->with('success', 'Laporan ditutup dengan catatan.');
+        }
     }
     public function timeline($id)
     {

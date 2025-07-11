@@ -60,7 +60,10 @@
                             <div class="col-md-6">
                                 <label><strong>Lampiran</strong></label><br>
                                 @if ($laporan->attachment)
-                                <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                                <button type="button" class="btn btn-sm btn-outline-primary file-preview-trigger"
+                                    data-url="{{ asset('storage/' . $laporan->attachment) }}">
+                                    <i class="fas fa-eye"></i> Lihat Lampiran
+                                </button>
                                 @else
                                 <span class="text-muted">Tidak ada file</span>
                                 @endif
@@ -87,7 +90,7 @@
                                     <option value="tinggi" {{ $laporan->prioritas == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
                                 </select>
                                 <small class="form-text text-muted mt-1">
-                                    <a href="{{ route('prioritas.aturan') }}" target="_blank">
+                                    <a href="#" data-toggle="modal" data-target="#prioritasModal">
                                         Lihat aturan penentuan prioritas
                                     </a>
                                 </small>
@@ -124,6 +127,7 @@
 <div class="modal fade" id="catatanModal" tabindex="-1" role="dialog" aria-labelledby="catatanModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form method="POST" action="{{ route('laporan.updateCatatan', $laporan->id) }}">
+             <input type="hidden" name="status" value="closed"> {{-- Tambahkan ini --}}
             @csrf
             @method('PUT')
             <div class="modal-content">
@@ -152,7 +156,8 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener("DOMContentLoaded", function() {
+        // modal catatan
         const statusDropdown = document.querySelector('select[name="status"]');
         if (statusDropdown) {
             statusDropdown.addEventListener('change', function() {
@@ -161,7 +166,67 @@
                 }
             });
         }
+
+        // modal preview lampiran
+        document.querySelectorAll('.file-preview-trigger').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const isPdf = url.toLowerCase().endsWith(".pdf");
+
+                const img = document.getElementById('previewImage');
+                const pdf = document.getElementById('previewPdf');
+
+                if (isPdf) {
+                    img.classList.add('d-none');
+                    pdf.hidden = false;
+                    pdf.src = url;
+                } else {
+                    pdf.hidden = true;
+                    img.src = url;
+                    img.classList.remove('d-none');
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+                modal.show();
+            });
+        });
     });
 </script>
+<!-- Modal Aturan Penentuan Prioritas -->
+<div class="modal fade" id="prioritasModal" tabindex="-1" aria-labelledby="prioritasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow rounded-3 border-0">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="prioritasModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>Aturan Penentuan Prioritas
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body bg-light text-center">
+                <img src="{{ asset('images/aturan_prioritas.jpg') }}" alt="Aturan Prioritas"
+                    class="img-fluid rounded shadow-sm" style="max-height: 700px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Preview Lampiran -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow rounded-3 border-0">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="previewModalLabel">
+                    <i class="fas fa-eye me-2"></i>Preview Lampiran
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body bg-light text-center">
+                <img id="previewImage" class="img-fluid rounded shadow-sm d-none" style="max-height: 700px;" />
+                <iframe id="previewPdf" class="w-100 rounded shadow-sm" style="height: 600px;" hidden></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection

@@ -119,15 +119,17 @@
 </div>
 <!-- Modal Preview Lampiran -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Preview File</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow rounded-3 border-0">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="previewModalLabel">
+                    <i class="fas fa-eye me-2"></i>Preview Lampiran
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <div class="modal-body text-center">
-                <img id="previewImage" class="img-fluid d-none" />
-                <iframe id="previewPdf" class="w-100" style="height: 500px;" hidden></iframe>
+            <div class="modal-body bg-light text-center">
+                <img id="previewImage" class="img-fluid rounded shadow-sm d-none" style="max-height: 700px;" />
+                <iframe id="previewPdf" class="w-100 rounded shadow-sm" style="height: 600px;" hidden></iframe>
             </div>
         </div>
     </div>
