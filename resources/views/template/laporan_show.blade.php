@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <h2 class="mb-4 font-weight-bold" style="font-size: xx-large;">
+    <h2 class="mb-4 font-weight-bold" style="font-size: 25px;">
         <i class="fas fa-file-alt mr-2"></i> Detail Laporan
     </h2>
 

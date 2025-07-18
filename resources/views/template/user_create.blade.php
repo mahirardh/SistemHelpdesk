@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">Tambah Pengguna</h4>
+    <h2 class="mb-2 font-weight-bold" style="font-size: xx-large;">Tambah Pengguna</h2>
 
     @if ($errors->any())
     <div class="alert alert-danger">

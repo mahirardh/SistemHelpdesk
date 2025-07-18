@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">BERANDA</h4>
+    <h2 class="mb-3 font-weight-bold" style="font-size: 25px; ">Beranda</h2>
 
     <div class="row">
         <div class="col-md-3">

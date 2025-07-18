@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="mb-4 font-weight-bold" style="font-size: xx-large;">Daftar Pengguna</h2>
+    <h2 class="mb-2 font-weight-bold" style="font-size: 25px;">Daftar Pengguna</h2>
 
     @if(session('success'))
     <div class="alert alert-success">
@@ -17,7 +17,7 @@
     @endif
 
     <form method="GET" action="{{ route('users.index') }}">
-        <div class="row mb-3 align-items-center">
+        <div class="row mb-2 align-items-center">
             <div class="col-md-6 text-left">
                 <a href="{{ route('users.create') }}" class="btn btn-primary">
                     Tambah Pengguna
@@ -34,7 +34,7 @@
         </div>
     </form>
 
-    <table class="table table-bordered table-striped mt-2">
+    <table class="table table-bordered table-striped ">
         <thead class="thead-dark">
             <tr class="text-center">
                 <th>No</th>

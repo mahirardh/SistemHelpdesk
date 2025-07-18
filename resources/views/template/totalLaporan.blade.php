@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="mb-1 font-weight-bold" style="font-size: xx-large;">Tabel Laporan</h2>
+    <h2 class="mb-1 font-weight-bold" style="font-size: 25px;">Tabel Laporan</h2>
 
     @if(session('success'))
     <div class="alert alert-success">
@@ -11,7 +11,7 @@
     @endif
 
     <form method="GET" action="{{ route('totalLaporan') }}">
-        <div class="row mb-3 align-items-center">
+        <div class="row mb-2 align-items-center">
             <div class="col-md-6 text-left">
                 <a href="{{ route('laporan.create') }}" class="btn btn-primary">
                     Tambah Laporan

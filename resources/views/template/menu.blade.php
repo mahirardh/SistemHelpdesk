@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">BERANDA ASISTEN</h4>
+    <h2 class="mb-3 font-weight-bold" style="font-size: 25px; ">Beranda Asisten</h2>
     <form method="GET" class="form-inline mb-4">
         <label class="mr-2">Dari:</label>
         <input type="date" name="start_date" class="form-control mr-3" value="{{ request('start_date') }}">
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <h5 class="mt-5 mb-3 font-weight-bold">LAPORAN YANG SEDANG DIPROSES</h5>
+    <h2 class="mb-3 font-weight-bold" style="font-size: 25px; ">Laporan Yang Sedang Diproses</h2>
     <div class="row">
         @foreach ($laporanPerPIC as $pic)
         <div class="col-md-3 mb-3">

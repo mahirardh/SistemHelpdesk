@@ -7,7 +7,7 @@
     <form method="GET" action="{{ route('laporanSelesai') }}">
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
-                <h1 class="mb-0 font-weight-bold" style="font-size: xx-large;">Laporan Selesai</h1>
+                <h1 class="mb-0 font-weight-bold" style="font-size: 25px;">Laporan Selesai</h1>
             </div>
             <div class="col-md-4 offset-md-2">
                 <div class="input-group">

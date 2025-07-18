@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h4 class="mb-4 fw-bold" style="font-size: xx-large;">
+    <h4 class="mb-4 fw-bold" style="font-size: 25px;">
         <i class="nav-icon fas fa-book mr-2"></i>Solusi Masalah Umum
     </h4>
 

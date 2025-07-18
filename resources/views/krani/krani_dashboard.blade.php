@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold">BERANDA KRANI </h4>
+    <h2 class="mb-3 font-weight-bold" style="font-size: 25px; ">Beranda Krani</h2>
 
     <form method="GET" class="form-inline mb-4">
         <label class="mr-2">Dari:</label>
