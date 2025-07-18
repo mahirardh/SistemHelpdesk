@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-6">
                             <label><strong>Departemen</strong></label>
-                            <input type="text" class="form-control" value="{{ $laporan->pelapor->departemen }}" readonly>
+                            <input type="text" class="form-control" value="{{ $laporan->pelapor->departemen->nama_departemen ?? '-' }}" readonly>
                         </div>
                     </div>
 

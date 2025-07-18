@@ -56,7 +56,7 @@
                 <td>{{ $user->email }}</td>
                 <td><span class="badge badge-secondary">{{ ucfirst($user->role) }}</span></td>
                 <td>{{ $user->no_hp }}</td>
-                <td>{{ $user->departemen }}</td>
+                <td>{{ $user->departemen->nama_departemen ?? '-' }}</td>
                 <td class="text-center">
                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-info">Detail</a>
                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>

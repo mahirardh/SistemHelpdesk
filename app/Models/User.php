@@ -17,7 +17,7 @@ class User extends Authenticatable
         'password',
         'no_sap',
         'no_hp',
-        'departemen',
+        'departemen_id',
         'role',
     ];
 
@@ -53,9 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Laporan::class, 'pic_id');
     }
-
+    // Di model User.php
     public function departemen()
     {
-        return $this->belongsTo(Departemen::class, 'departemen_id');
+        return $this->belongsTo(Departemen::class);
     }
 }

@@ -23,7 +23,7 @@
             <div class="font-semibold">No SAP</div>
             <div>: {{ $user->no_sap ?? '-' }}</div>
             <div class="font-semibold">Departemen</div>
-            <div>: {{ $user->departemen ?? '-' }}</div>
+            <div>: {{ $user->departemen->nama_departemen ?? '-' }}</div>
             <div class="font-semibold">No HP</div>
             <div>: {{ $user->no_hp ?? '-' }}</div>
             <div class="font-semibold">Email</div>

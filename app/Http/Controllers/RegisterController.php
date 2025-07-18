@@ -19,6 +19,8 @@ class RegisterController extends Controller
     // Proses registrasi
     public function register(Request $request)
     {
+        // dd($request->all());
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -26,7 +28,7 @@ class RegisterController extends Controller
             // 'role' => 'required|in:asisten,krani,pelapor',
             'no_sap' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
-            'departemen' => 'required',
+            'departemen' => 'required|exists:departemens,id',
         ]);
 
         User::create([
@@ -36,7 +38,7 @@ class RegisterController extends Controller
             'role' => 'pelapor',
             'no_sap' => $validated['no_sap'],
             'no_hp' => $validated['no_hp'],
-            'departemen' => $validated['departemen'],
+            'departemen_id' => $validated['departemen'],
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login.');

@@ -38,7 +38,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'no_sap' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
-            'departemen' => 'required|string',
+            'departemen' => 'required|exists:departemens,id',
             'role' => 'required|in:asisten,krani,pelapor',
         ]);
 
@@ -48,7 +48,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'no_sap' => $validated['no_sap'],
             'no_hp' => $validated['no_hp'],
-            'departemen' => $validated['departemen'],
+            'departemen_id' => $validated['departemen'],
             'role' => $validated['role'],
         ]);
 

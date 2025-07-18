@@ -43,7 +43,7 @@
     </style>
     <style>
         body {
-            background-color:  #f7f7f7;
+            background-color: #f7f7f7;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -127,13 +127,14 @@
                 <select name="departemen" id="departemen" class="form-control" required>
                     <option value="" disabled selected>-- Pilih Departemen --</option>
                     @foreach ($departemens as $dept)
-                    <option value="{{ $dept->nama_departemen }}" {{ old('departemen') == $dept->nama_departemen ? 'selected' : '' }}>
+                    <option value="{{ $dept->id }}" {{ old('departemen') == $dept->id ? 'selected' : '' }}>
                         {{ $dept->nama_departemen }}
                     </option>
                     @endforeach
                 </select>
                 @error('departemen') <small>{{ $message }}</small> @enderror
             </div>
+
 
             <div class="form-group">
                 <label>Password</label>
