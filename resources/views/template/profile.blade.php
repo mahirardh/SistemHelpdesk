@@ -1,7 +1,7 @@
 @extends('template.master')
 
 @section('content')
-<div class="max-w-5xl mx-auto mt-10 bg-white rounded-xl shadow px-8 py-6">
+<div class="max-w-5xl mx-auto bg-white rounded-xl shadow px-8 py-6">
 
     {{-- Judul --}}
     <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">Profil Pengguna</h2>
@@ -33,8 +33,8 @@
 
     {{-- Box Performa --}}
     @if (in_array($user->role, ['asisten', 'krani']))
-    <div class="mt-10 p-6 bg-gray-100 rounded-lg shadow-inner border border-gray-200">
-        <div class="flex justify-between items-center mb-5">
+    <div class="mt-8 p-6 bg-gray-100 rounded-lg shadow-inner border border-gray-200">
+        <div class="flex justify-between items-center mb-3">
             <h3 class="text-xl font-semibold text-gray-800">Performa</h3>
 
             {{-- Form Export PDF --}}
@@ -93,7 +93,7 @@
     @endif
 
     {{-- Tombol Tutup --}}
-    <div class="mt-8 flex justify-end">
+    <div class="flex justify-end mt-3">
         <a href="{{ url()->previous() }}"
            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded shadow transition duration-150">
             Tutup

@@ -3,17 +3,17 @@
 @section('content')
 <div class="container-fluid">
 
-    <div class="row align-items-center mb-4">
+    <div class="row align-items-center mb-3">
         <div class="col-md-8">
-            <h2 class="mb-4 font-weight-bold" style="font-size: xx-large;">Daftar Laporan</h2>
+            <h2 class="font-weight-bold mb-0" style="font-size: xx-large;">Daftar Laporan</h2>
         </div>
         <div class="col-md-4 d-flex justify-content-end">
             <form method="GET" action="{{ route('laporan.pelapor') }}" class="w-100">
                 <div class="input-group">
-                    <input type="text" name="search" id="search" class="form-control" placeholder="Cari ticket" value="{{ request('search') }}">
+                    <input type="text" name="search" id="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-dark">
-                            <i class="fas fa-search mr-1"></i>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search mr-1"></i> Cari
                         </button>
                     </div>
                 </div>
@@ -22,13 +22,16 @@
     </div>
 
     @if(session('success'))
-    <div class="alert alert-success mb-3">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Tutup">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     @endif
 
     <div class="table-responsive">
-        <table class="table table-bordered mt-4">
+        <table class="table table-bordered">
             <thead class="thead-dark text-center">
                 <tr>
                     <th>Ticket No.</th>
@@ -76,7 +79,7 @@
         </table>
     </div>
 
-    <div class="d-flex justify-content-end mt-3">
+    <div class="d-flex justify-content-end mt-2">
         {{ $laporans->withQueryString()->links('pagination::bootstrap-4') }}
     </div>
 </div>

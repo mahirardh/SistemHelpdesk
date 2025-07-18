@@ -50,7 +50,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars ml-2"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('beranda') }}" class="nav-link">Home</a>
+                    <!-- <a href="{{ route('beranda') }}" class="nav-link">Home</a> -->
                 </li>
             </ul>
             <!-- Right navbar links -->
@@ -248,6 +248,8 @@
     @yield('js')
     @stack('scripts')
     @yield('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

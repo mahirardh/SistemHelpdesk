@@ -34,7 +34,14 @@
         <!-- Departemen -->
         <div class="form-group">
             <label for="departemen">Departemen</label>
-            <input name="departemen" id="departemen" type="text" class="form-control" value="{{ $user->departemen }}">
+            <select name="departemen" id="departemen" class="form-control select2" required>
+                <option value="" disabled>-- Pilih Departemen --</option>
+                @foreach ($departemens as $dept)
+                    <option value="{{ $dept->nama_departemen }}" {{ $user->departemen == $dept->nama_departemen ? 'selected' : '' }}>
+                        {{ $dept->nama_departemen }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Role -->
@@ -51,4 +58,34 @@
         <a href="{{ route('users.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
+@endsection
+
+@section('scripts')
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Styling Select2 biar nyatu -->
+<style>
+    .select2-container--default .select2-selection--single {
+        height: 38px !important;
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#departemen').select2({
+            placeholder: "-- Pilih Departemen --",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
 @endsection

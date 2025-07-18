@@ -10,9 +10,17 @@ use App\Models\Departemen;
 class UserController extends Controller
 {
     // Menampilkan daftar user
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $search = $request->input('search');
+
+        $users = User::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('no_sap', 'like', "%{$search}%");
+            })
+            ->paginate(10);
         return view('template.user', compact('users'));
     }
     public function create()
@@ -57,7 +65,9 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('template.edit', compact('user'));
+        $departemens = Departemen::all();
+
+        return view('template.edit', compact('user', 'departemens'));
     }
 
     public function update(Request $request, $id)

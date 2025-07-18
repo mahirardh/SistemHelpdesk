@@ -2,15 +2,19 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Laporan Sedang Diproses</h1>
-    <!-- Form Pencarian (tidak aktif) -->
-    <form method="GET" action="#" disabled>
-        <div class="row">
-            <div class="col-md-4">
-                <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" disabled>
+    <!-- Form Pencarian -->
+    <form method="GET" action="{{ route('proses') }}">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-6">
+                <h1 class="mb-0 font-weight-bold" style="font-size: xx-large;">Antrian Laporan</h1>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary" disabled>Cari</button>
+            <div class="col-md-4 offset-md-2">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -43,7 +47,7 @@
                     <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">
                         <i class="fas fa-eye"></i> Detail
                     </a>
-                    <a href="{{ route('laporan.edit', $laporan->id) }}" class="btn btn-sm btn-dark">
+                    <a href="{{ route('laporan.edit', $laporan->id) }}" class="btn btn-sm btn-success">
                         <i class="fas fa-reply"></i> Respon
                     </a>
                 </td>

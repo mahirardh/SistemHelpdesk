@@ -2,18 +2,25 @@
 
 @section('content')
 <div class="container-fluid">
- <h1 class="mb-4 font-weight-bold" style="font-size: xx-large;">Laporan Selesai</h1>
+
     <!-- Form Pencarian -->
     <form method="GET" action="{{ route('laporanSelesai') }}">
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-6">
+                <h1 class="mb-0 font-weight-bold" style="font-size: xx-large;">Laporan Selesai</h1>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Cari</button>
+            <div class="col-md-4 offset-md-2">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
+
+
 
     <!-- Tabel Laporan Selesai -->
     <table class="table table-bordered mt-4">

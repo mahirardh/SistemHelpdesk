@@ -11,7 +11,7 @@
     <p>Silakan tinjau dan beri respon jika Anda merasa laporan sudah selesai atau masih ada hal yang perlu ditindaklanjuti.</p>
 
     <p>
-        <a href="https://reg3.ptpn4helpdesk.pocari.id/pelapor/laporan/{{ $laporan->id }}">
+        <a href="https://reg3.ptpn4helpdesk.pocari.id/">
             Lihat Laporan
         </a>
     </p>

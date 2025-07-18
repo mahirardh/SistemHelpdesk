@@ -2,9 +2,10 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <h4 class="mb-4 fw-bold">
-        <i class="fas fa-file-alt"></i> Detail Laporan
-    </h4>
+    <h2 class="mb-4 font-weight-bold" style="font-size: xx-large;">
+        <i class="fas fa-file-alt mr-2"></i> Detail Laporan
+    </h2>
+
 
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -56,10 +57,21 @@
                         <div class="col-md-6">
                             <label><strong>Lampiran</strong></label><br>
                             @if ($laporan->attachment)
+                            @php
+                            $ext = pathinfo($laporan->attachment, PATHINFO_EXTENSION);
+                            $previewable = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf']);
+                            @endphp
+
+                            @if ($previewable)
                             <button type="button" class="btn btn-outline-primary btn-sm file-preview-trigger"
                                 data-url="{{ asset('storage/' . $laporan->attachment) }}">
                                 <i class="fas fa-eye"></i> Lihat Lampiran
                             </button>
+                            @else
+                            <a href="{{ asset('storage/' . $laporan->attachment) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-download"></i> Unduh Lampiran
+                            </a>
+                            @endif
                             @else
                             <span class="text-muted">Tidak ada lampiran</span>
                             @endif
@@ -127,10 +139,11 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <div class="modal-body bg-light text-center">
-                <img id="previewImage" class="img-fluid rounded shadow-sm d-none" style="max-height: 700px;" />
-                <iframe id="previewPdf" class="w-100 rounded shadow-sm" style="height: 600px;" hidden></iframe>
+            <div class="modal-body bg-light d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                <img id="previewImage" class="rounded shadow-sm d-none" style="max-width: 100%; max-height: 80vh; object-fit: contain;" />
+                <iframe id="previewPdf" class="w-100 rounded shadow-sm" style="height: 80vh;" hidden></iframe>
             </div>
+
         </div>
     </div>
 </div>

@@ -1,12 +1,12 @@
 @extends('template.master')
 
 @section('content')
-<div class="container py-4">
+<div class="container">
     <h4 class="mb-4 fw-bold" style="font-size: xx-large;">
         <i class="nav-icon fas fa-book mr-2"></i>Solusi Masalah Umum
     </h4>
 
-    <form method="GET" class="mb-4">
+    <form method="GET" class="mb-2">
         <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan tiket, masalah, atau kategori..." value="{{ request('search') }}">
     </form>
 
@@ -34,8 +34,8 @@
 
                 @if (!empty($laporan->attachment))
                 <button type="button"
-                        class="btn btn-dark btn-sm mt-2 file-preview-trigger"
-                        data-url="{{ asset('storage/' . $laporan->attachment) }}">
+                    class="btn btn-dark btn-sm mt-2 file-preview-trigger"
+                    data-url="{{ asset('storage/' . $laporan->attachment) }}">
                     <i class="fas fa-paperclip"></i> Lihat Lampiran
                 </button>
                 @endif
@@ -58,7 +58,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Preview File</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
             </div>
             <div class="modal-body text-center">
                 <img id="previewImage" class="img-fluid d-none" />

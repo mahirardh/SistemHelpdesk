@@ -196,17 +196,23 @@ class LaporanController extends Controller
         return view('template.laporan_show', compact('laporan'));
     }
 
-    public function antrian()
+    // Contoh di controller
+    public function antrian(Request $request)
     {
-        $laporans = Laporan::with(['kategori', 'pelapor'])
-            ->where('status', 'open')
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $query = Laporan::with(['pelapor', 'kategori'])
+            ->where('status', 'open');
+
+        // Cek apakah ada input pencarian
+        if ($request->has('search') && $request->search != '') {
+            $query->where('ticket_number', 'like', '%' . $request->search . '%');
+        }
+
+        $laporans = $query->latest()->get();
 
         return view('template.antrian', compact('laporans'));
     }
 
-    public function diproses()
+    public function diproses(Request $request)
     {
         $user = Auth::user();
 
@@ -220,12 +226,17 @@ class LaporanController extends Controller
         if ($user->role == 'pelapor') {
             $query->where('pelapor_id', $user->id);
         }
+        if ($request->has('search') && $request->search != '') {
+            $query->where('ticket_number', 'like', '%' . $request->search . '%');
+        }
+        
         $laporans = $query->latest()->paginate(10);
-
+        
         // Tambahkan logika SLA ke setiap laporan
         foreach ($laporans as $laporan) {
             $laporan->status_sla = $this->hitungStatusSLA($laporan);
         }
+
         return view('template.diproses', compact('laporans'));
     }
     public function close(Request $request, $id)

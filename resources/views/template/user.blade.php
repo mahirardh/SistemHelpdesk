@@ -2,17 +2,37 @@
 
 @section('content')
 <div class="container-fluid">
-    <h4 class="mb-4 font-weight-bold" style="font-size: xx-large;">Daftar Pengguna</h4>
+    <h2 class="mb-4 font-weight-bold" style="font-size: xx-large;">Daftar Pengguna</h2>
 
-    <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah Pengguna</a>
-
-    @if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @endif
 
-    @if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
+
+    <form method="GET" action="{{ route('users.index') }}">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-6 text-left">
+                <a href="{{ route('users.create') }}" class="btn btn-primary">
+                    Tambah Pengguna
+                </a>
+            </div>
+            <div class="col-md-4 offset-md-2">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari nama, email, atau No. SAP" value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <table class="table table-bordered table-striped mt-2">
         <thead class="thead-dark">
@@ -29,7 +49,7 @@
         </thead>
         <tbody>
             @forelse ($users as $user)
-            <tr >
+            <tr>
                 <td class="text-center">{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                 <td>{{ $user->no_sap }}</td>
                 <td>{{ $user->name }}</td>
@@ -55,8 +75,9 @@
         </tbody>
     </table>
 
-    <div class="d-flex justify-content-center">
-        {{ $users->links() }}
+    <!-- Pagination -->
+    <div class="d-flex justify-content-end">
+        {{ $users->withQueryString()->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection
