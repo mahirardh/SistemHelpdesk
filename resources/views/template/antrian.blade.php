@@ -37,7 +37,7 @@
             @forelse ($laporans as $laporan)
             <tr class="text-center">
                 <td>{{ $laporan->ticket_number }}</td>
-                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y') }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                 <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
                 <td>

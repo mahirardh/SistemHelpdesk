@@ -229,9 +229,9 @@ class LaporanController extends Controller
         if ($request->has('search') && $request->search != '') {
             $query->where('ticket_number', 'like', '%' . $request->search . '%');
         }
-        
+
         $laporans = $query->latest()->paginate(10);
-        
+
         // Tambahkan logika SLA ke setiap laporan
         foreach ($laporans as $laporan) {
             $laporan->status_sla = $this->hitungStatusSLA($laporan);
@@ -346,14 +346,14 @@ class LaporanController extends Controller
     {
         // Pastikan SLA dan tanggal selesai tersedia
         if ($laporan->sla_close) {
-            $batasSLA = \Carbon\Carbon::parse($laporan->sla_close);
-
+            $batasSLA = \Carbon\Carbon::parse($laporan->sla_close)->toDateString();
+            
             // Jika sudah selesai
             if ($laporan->tanggal_selesai) {
-                $selesai = \Carbon\Carbon::parse($laporan->tanggal_selesai);
-                return $selesai->lessThanOrEqualTo($batasSLA) ? 'Tepat Waktu' : 'Terlambat';
+                $selesai = \Carbon\Carbon::parse($laporan->tanggal_selesai)->toDateString();
+                return $selesai <= $batasSLA ? 'Tepat Waktu' : 'Terlambat';
             }
-
+            
             // Jika belum selesai tapi sudah lewat SLA
             if (now()->greaterThan($batasSLA)) {
                 return 'Melewati Batas Waktu';

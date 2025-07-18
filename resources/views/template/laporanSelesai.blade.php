@@ -28,6 +28,7 @@
             <tr class="text-center">
                 <th>No. Tiket</th>
                 <th>Tanggal Dibuat</th>
+                <th>Batas SLA</th>
                 <th>Tanggal Selesai</th>
                 <th>Nama Pelapor</th>
                 <th>PIC</th>
@@ -42,6 +43,9 @@
             <tr class="text-center">
                 <td>{{ $laporan->ticket_number }}</td>
                 <td>{{ \Carbon\Carbon::parse($laporan->created_at)->format('d/m/y') }}</td>
+                <td>
+                    {{ $laporan->sla_close ? \Carbon\Carbon::parse($laporan->sla_close)->format('d/m/y') : '-' }}
+                </td>
                 <td>{{ $laporan->tanggal_selesai ? \Carbon\Carbon::parse($laporan->tanggal_selesai)->format('d/m/y') : '-' }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                 <td>{{ $laporan->pic->name ?? '-' }}</td>
