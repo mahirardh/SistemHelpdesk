@@ -6,7 +6,7 @@
     <form method="GET" action="{{ route('proses') }}">
         <div class="row mb-3 align-items-center">
             <div class="col-md-6">
-                <h1 class="mb-0 font-weight-bold" style="font-size: 25px;">Antrian Laporan</h1>
+                <h1 class="mb-0 font-weight-bold" style="font-size: 25px;">Laporan Sedang Diproses</h1>
             </div>
             <div class="col-md-4 offset-md-2">
                 <div class="input-group">

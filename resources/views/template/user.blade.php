@@ -58,13 +58,21 @@
                 <td>{{ $user->no_hp }}</td>
                 <td>{{ $user->departemen->nama_departemen ?? '-' }}</td>
                 <td class="text-center">
-                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-info">Detail</a>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                    </form>
+                    <div class="d-inline-flex gap-1">
+                        {{-- Tombol Edit --}}
+                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+
+                        {{-- Tombol Hapus --}}
+                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @empty
