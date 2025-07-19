@@ -78,7 +78,7 @@ class UserController extends Controller
             'role' => 'required|in:asisten,krani,pelapor',
             'no_sap' => 'required|string|max:255',
             'no_hp' => 'nullable|string|max:15',
-            'departemen' => 'nullable|string|max:100',
+            'departemen_id' => 'required|exists:departemens,id',
         ]);
 
         $user = User::findOrFail($id);

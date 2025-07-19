@@ -32,17 +32,14 @@
         </div>
 
         <!-- Departemen -->
-        <div class="form-group">
-            <label for="departemen">Departemen</label>
-            <select name="departemen" id="departemen" class="form-control select2" required>
-                <option value="" disabled>-- Pilih Departemen --</option>
-                @foreach ($departemens as $dept)
-                    <option value="{{ $dept->nama_departemen }}" {{ $user->departemen == $dept->nama_departemen ? 'selected' : '' }}>
-                        {{ $dept->nama_departemen }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <select name="departemen_id" id="departemen_id" class="form-control select2" required>
+            <option value="" disabled>-- Pilih Departemen --</option>
+            @foreach ($departemens as $dept)
+            <option value="{{ $dept->id }}" {{ $user->departemen_id == $dept->id ? 'selected' : '' }}>
+                {{ $dept->nama_departemen }}
+            </option>
+            @endforeach
+        </select>
 
         <!-- Role -->
         <div class="form-group">
@@ -74,13 +71,14 @@
         border: 1px solid #ced4da;
         border-radius: 4px;
     }
+
     .select2-container {
         width: 100% !important;
     }
 </style>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#departemen').select2({
             placeholder: "-- Pilih Departemen --",
             allowClear: true,
