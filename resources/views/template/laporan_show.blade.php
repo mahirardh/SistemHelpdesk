@@ -88,7 +88,7 @@
                             <label><strong>Prioritas</strong></label>
                             <input type="text" class="form-control" value="{{ ucfirst($laporan->prioritas) ?? '-' }}" readonly>
                             <small class="form-text text-muted mt-1">
-                                <a href="{{ route('prioritas.aturan') }}" target="_blank">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#prioritasModal">
                                     Lihat aturan penentuan prioritas
                                 </a>
                             </small>
@@ -129,6 +129,28 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Aturan Penentuan Prioritas -->
+<div class="modal fade" id="prioritasModal" tabindex="-1" aria-labelledby="prioritasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: fit-content;">
+        <div class="modal-content shadow rounded-3 border-0">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="prioritasModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>Aturan Penentuan Prioritas
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body bg-light text-center p-0">
+                <img src="{{ asset('images/aturan_prioritas.jpg') }}"
+                    alt="Aturan Prioritas"
+                    class="rounded"
+                    style="display: block; max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal Preview Lampiran -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">

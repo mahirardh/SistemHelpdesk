@@ -90,10 +90,11 @@
                                     <option value="tinggi" {{ $laporan->prioritas == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
                                 </select>
                                 <small class="form-text text-muted mt-1">
-                                    <a href="#" data-toggle="modal" data-target="#prioritasModal">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#prioritasModal">
                                         Lihat aturan penentuan prioritas
                                     </a>
                                 </small>
+
                             </div>
                         </div>
 
@@ -127,7 +128,7 @@
 <div class="modal fade" id="catatanModal" tabindex="-1" role="dialog" aria-labelledby="catatanModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form method="POST" action="{{ route('laporan.updateCatatan', $laporan->id) }}">
-             <input type="hidden" name="status" value="closed"> {{-- Tambahkan ini --}}
+            <input type="hidden" name="status" value="closed"> {{-- Tambahkan ini --}}
             @csrf
             @method('PUT')
             <div class="modal-content">
@@ -192,9 +193,10 @@
         });
     });
 </script>
+
 <!-- Modal Aturan Penentuan Prioritas -->
 <div class="modal fade" id="prioritasModal" tabindex="-1" aria-labelledby="prioritasModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: fit-content;">
         <div class="modal-content shadow rounded-3 border-0">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title fw-bold" id="prioritasModalLabel">
@@ -202,13 +204,17 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <div class="modal-body bg-light text-center">
-                <img src="{{ asset('images/aturan_prioritas.jpg') }}" alt="Aturan Prioritas"
-                    class="img-fluid rounded shadow-sm" style="max-height: 700px;">
+            <div class="modal-body bg-light text-center p-0">
+                <img src="{{ asset('images/aturan_prioritas.jpg') }}"
+                    alt="Aturan Prioritas"
+                    class="rounded"
+                    style="display: block; max-width: 100%; height: auto;">
             </div>
         </div>
     </div>
 </div>
+
+
 
 <!-- Modal Preview Lampiran -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
