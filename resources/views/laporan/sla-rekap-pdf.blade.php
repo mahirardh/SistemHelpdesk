@@ -51,7 +51,7 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $laporan->ticket_number }}</td>
-                <td>{{ $laporan->pelapor->departemen ?? '-' }}</td>
+                <td>{{ $laporan->pelapor->departemen->nama_departemen ?? '-' }}</td>
                 <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                 <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
                 <td>{{ $laporan->description }}</td>

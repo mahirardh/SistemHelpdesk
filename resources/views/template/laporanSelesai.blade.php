@@ -9,17 +9,30 @@
             <div class="col-md-6">
                 <h1 class="mb-0 font-weight-bold" style="font-size: 25px;">Laporan Selesai</h1>
             </div>
-            <div class="col-md-4 offset-md-2">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Cari</button>
+
+            <div class="col-md-6">
+                <div class="d-flex gap-2">
+                    <!-- Dropdown PIC -->
+                    <select name="pic_id" class="form-control w-50">
+                        <option value="">-- Semua PIC --</option>
+                        @foreach($daftarPic as $pic)
+                        <option value="{{ $pic->id }}" {{ $selectedPicId == $pic->id ? 'selected' : '' }}>
+                            {{ $pic->name }} ({{ $pic->role }})
+                        </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Input Pencarian Tiket -->
+                    <div class="input-group w-50">
+                        <input type="text" name="search" class="form-control" placeholder="Cari nomor tiket" value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-
 
 
     <!-- Tabel Laporan Selesai -->
@@ -53,14 +66,15 @@
                 <td><span class="badge badge-success">{{ ucfirst($laporan->status) }}</span></td>
                 <td>
                     <span class="badge 
-                @if($laporan->status_sla === 'Tepat Waktu') bg-success 
-                @elseif($laporan->status_sla === 'Terlambat') bg-danger 
-                @elseif($laporan->status_sla === 'Melewati Batas Waktu') bg-warning 
-                @else bg-secondary 
-                @endif">
+        @if($laporan->status_sla === 'Tepat Waktu') bg-success text-white
+        @elseif($laporan->status_sla === 'Terlambat') bg-danger text-white
+        @elseif($laporan->status_sla === 'Melewati Batas Waktu') bg-warning text-dark
+        @else bg-secondary
+        @endif">
                         {{ $laporan->status_sla }}
                     </span>
                 </td>
+
                 <td><a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">Detail</a></td>
             </tr>
             @empty

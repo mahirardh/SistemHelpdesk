@@ -35,7 +35,7 @@
     @if (in_array($user->role, ['asisten', 'krani']))
     <div class="mt-8 p-6 bg-gray-100 rounded-lg shadow-inner border border-gray-200">
         <div class="flex justify-between items-center mb-3">
-            <h3 class="text-xl font-semibold text-gray-800">Performa</h3>
+            <h3 class="text-xl font-semibold text-gray-800">Kinerja</h3>
 
             {{-- Form Export PDF --}}
             <form action="{{ route('laporan.export.sla') }}" method="GET" class="flex items-center gap-2">

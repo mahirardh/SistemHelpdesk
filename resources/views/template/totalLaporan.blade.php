@@ -11,17 +11,27 @@
     @endif
 
     <form method="GET" action="{{ route('totalLaporan') }}">
-        <div class="row mb-2 align-items-center">
-            <div class="col-md-6 text-left">
+        <div class="row justify-content-between align-items-center mb-3">
+            <div class="col-auto">
                 <a href="{{ route('laporan.create') }}" class="btn btn-primary">
                     Tambah Laporan
                 </a>
             </div>
-            <div class="col-md-4 offset-md-2">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Cari</button>
+            <div class="col-md-8">
+                <div class="row gx-2 justify-content-end">
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">Semua Status</option>
+                            <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Open</option>
+                            <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Closed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nomor tiket" value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,22 +60,34 @@
                     <td>{{ $laporan->pelapor->name ?? '-' }}</td>
                     <td>{{ $laporan->pic->name ?? '-' }}</td>
                     <td>{{ $laporan->kategori->nama_kategori ?? '-' }}</td>
+                    @php
+                    $statusClass = [
+                    'open' => 'badge-warning',
+                    'in_progress' => 'badge-info',
+                    'closed' => 'badge-success',
+                    'expired' => 'badge-danger font-weight-bold',
+                    ];
+                    @endphp
+
                     <td>
-                        <span class="badge 
-                            {{ $laporan->status == 'open' ? 'badge-warning' : 
-                               ($laporan->status == 'in_progress' ? 'badge-info' : 'badge-success') }}">
+                        <span class="badge {{ $statusClass[$laporan->status] ?? 'badge-secondary' }}">
                             {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}
                         </span>
                     </td>
+
                     <td>
-                        <button class="btn btn-sm btn-outline-dark"
-                            data-bs-toggle="modal"
-                            data-bs-target="#timelineModal"
-                            data-id="{{ $laporan->id }}"
-                            onclick="loadTimeline(this)">
-                            Lacak
-                        </button>
+                        <span class="badge 
+        {{ 
+            $laporan->status == 'open' ? 'badge-warning' : 
+            ($laporan->status == 'in_progress' ? 'badge-info' : 
+            ($laporan->status == 'closed' ? 'badge-success' : 
+            ($laporan->status == 'expired' ? 'badge-danger font-weight-bold' : 'badge-secondary'))) 
+        }}">
+                            {{ ucfirst(str_replace('_', ' ', $laporan->status)) }}
+                        </span>
                     </td>
+
+
                     <td>
                         <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-eye"></i> Detail
@@ -122,33 +144,33 @@
                 }
 
                 let html = `
-            <ul class="timeline list-unstyled position-relative ps-4">
-                ${data.created_at ? `
-                <li class="mb-4 position-relative">
-                    <div class="box">
-                        <div class="fw-bold">📄 Laporan Dibuat</div>
-                        <small class="text-muted">${new Date(data.created_at).toLocaleString('id-ID')}</small>
-                    </div>
-                </li>` : ''}
-                
-                ${data.tanggal_mulai ? `
-                <li class="mb-4 position-relative">
-                    <div class="box border-start border-4 border-primary">
-                        <div class="fw-bold">🚀 Mulai Dikerjakan</div>
-                        <small class="text-muted">${new Date(data.tanggal_mulai).toLocaleString('id-ID')}</small>
-                        ${data.nama_pic ? `<div class="text-secondary mt-1">👤 PIC: ${data.nama_pic}</div>` : ''}
-                    </div>
-                </li>` : ''}
+                <ul class="timeline list-unstyled position-relative ps-4">
+                    ${data.created_at ? `
+                    <li class="mb-4 position-relative">
+                        <div class="box">
+                            <div class="fw-bold">📄 Laporan Dibuat</div>
+                            <small class="text-muted">${new Date(data.created_at).toLocaleString('id-ID')}</small>
+                        </div>
+                    </li>` : ''}
 
-                ${data.tanggal_selesai ? `
-                <li class="mb-4 position-relative">
-                    <div class="box border-start border-4 border-success">
-                        <div class="fw-bold">✅ Selesai</div>
-                        <small class="text-muted">${new Date(data.tanggal_selesai).toLocaleString('id-ID')}</small>
-                        ${data.catatan_selesai ? `<div class="mt-1 text-muted fst-italic">📝 ${data.catatan_selesai}</div>` : ''}
-                    </div>
-                </li>` : ''}
-            </ul>`;
+                    ${data.tanggal_mulai ? `
+                    <li class="mb-4 position-relative">
+                        <div class="box border-start border-4 border-primary">
+                            <div class="fw-bold">🚀 Mulai Dikerjakan</div>
+                            <small class="text-muted">${new Date(data.tanggal_mulai).toLocaleString('id-ID')}</small>
+                            ${data.nama_pic ? `<div class="text-secondary mt-1">👤 PIC: ${data.nama_pic}</div>` : ''}
+                        </div>
+                    </li>` : ''}
+
+                    ${data.tanggal_selesai ? `
+                    <li class="mb-4 position-relative">
+                        <div class="box border-start border-4 border-success">
+                            <div class="fw-bold">✅ Selesai</div>
+                            <small class="text-muted">${new Date(data.tanggal_selesai).toLocaleString('id-ID')}</small>
+                            ${data.catatan_selesai ? `<div class="mt-1 text-muted fst-italic">📝 ${data.catatan_selesai}</div>` : ''}
+                        </div>
+                    </li>` : ''}
+                </ul>`;
 
                 modalBody.innerHTML = html;
             })
@@ -194,4 +216,5 @@
         background-color: #e9f3ff;
     }
 </style>
+
 @endpush

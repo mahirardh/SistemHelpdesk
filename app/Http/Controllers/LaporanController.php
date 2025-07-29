@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Schema;
 // use PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class LaporanController extends Controller
 {
@@ -23,35 +26,61 @@ class LaporanController extends Controller
     {
         $user = Auth::user();
 
+        //Update status menjadi expired untuk laporan open lebih dari 3 hari
+        Laporan::where('status', 'open')
+            ->where('created_at', '<=', Carbon::now()->subDays(3))
+            ->update(['status' => 'expired']);
+
+
         // Mulai query laporan
         $query = Laporan::with(['pelapor', 'pic', 'kategori']);
 
-        // Kalau user adalah krani, filter berdasarkan dirinya sebagai PIC
+        // Filter berdasarkan role user
         if ($user->role == 'krani') {
             $query->where('pic_id', $user->id);
         }
-        // Kalau user adalah pelapor, filter berdasarkan dirinya sebagai pelapor
         if ($user->role == 'pelapor') {
             $query->where('pelapor_id', $user->id);
         }
-        // Fitur pencarian nomor tiket (opsional)
+
+        // Fitur pencarian nomor tiket
         if ($request->filled('search')) {
             $query->where('ticket_number', 'like', '%' . $request->search . '%');
         }
 
-        // Ambil hasil akhir
-        $laporans = $query->latest()->paginate(10);
+        // Filter berdasarkan status (opsional dari dropdown)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
-        // Tambahkan logika SLA ke setiap laporan
+        // Sorting: Status (open, in_progress, closed), lalu tanggal (created_at desc)
+        $query->orderByRaw("
+    CASE status
+        WHEN 'open' THEN 1
+        WHEN 'expired' THEN 2
+        WHEN 'in_progress' THEN 3
+        WHEN 'closed' THEN 4
+        ELSE 5
+    END
+")->orderBy('created_at', 'desc');
+
+
+        // Paginate hasil
+        $laporans = $query->paginate(10);
+
+        // Tambahkan status SLA untuk masing-masing laporan
         foreach ($laporans as $laporan) {
             $laporan->status_sla = $this->hitungStatusSLA($laporan);
         }
-        // Return view sesuai dengan role user
+
+        // Return ke view sesuai role
         if ($user->role === 'pelapor') {
             return view('pelapor.laporanPelapor', compact('laporans'));
         }
+
         return view('template.totalLaporan', compact('laporans'));
     }
+
 
     public function create()
     {
@@ -169,25 +198,56 @@ class LaporanController extends Controller
         $query = Laporan::with(['pelapor', 'pic', 'kategori'])
             ->where('status', 'closed');
 
-        if ($request->has('search') && $request->search != '') {
+        // Filter berdasarkan nomor tiket
+        if ($request->filled('search')) {
             $query->where('ticket_number', 'like', '%' . $request->search . '%');
         }
 
-        // Jika user adalah krani, filter berdasarkan pic_id (hanya miliknya)
-        if ($user->role == 'krani') {
+        // Role-based filter
+        if ($user->role === 'krani') {
             $query->where('pic_id', $user->id);
         }
-        if ($user->role == 'pelapor') {
+
+        if ($user->role === 'pelapor') {
             $query->where('pelapor_id', $user->id);
         }
 
-        $laporanSelesai = $query->latest()->paginate(10);
-
-        // Tambahkan logika SLA ke setiap laporan
-        foreach ($laporanSelesai as $laporan) {
-            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+        // Filter berdasarkan PIC yang dipilih di dropdown (khusus asisten)
+        $selectedPicId = $request->input('pic_id');
+        if ($user->role === 'asisten' && !empty($selectedPicId)) {
+            $query->where('pic_id', $selectedPicId);
         }
-        return view('template.laporanSelesai', compact('laporanSelesai'));
+
+        // Ambil semua data
+        $laporanSelesaiAll = $query->get();
+
+        // Hitung SLA dan buat sort order
+        foreach ($laporanSelesaiAll as $laporan) {
+            $laporan->status_sla = $this->hitungStatusSLA($laporan);
+            $laporan->sla_sort_order = match ($laporan->status_sla) {
+                'Terlambat' => 1,
+                'Melewati Batas Waktu' => 2,
+                'Tepat Waktu' => 3,
+                default => 4
+            };
+        }
+
+        // Sort by SLA order
+        $laporanSelesaiAll = $laporanSelesaiAll->sortBy('sla_sort_order');
+
+        // Manual pagination
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $laporanSelesaiAll->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $laporanSelesai = new LengthAwarePaginator($currentItems, $laporanSelesaiAll->count(), $perPage, $currentPage, [
+            'path' => $request->url(),
+            'query' => $request->query()
+        ]);
+
+        // Ambil semua pengguna ber-role krani dan asisten (untuk dropdown PIC)
+        $daftarPic = User::whereIn('role', ['krani', 'asisten'])->get();
+
+        return view('template.laporanSelesai', compact('laporanSelesai', 'daftarPic', 'selectedPicId'));
     }
 
     public function show($id)
@@ -347,13 +407,13 @@ class LaporanController extends Controller
         // Pastikan SLA dan tanggal selesai tersedia
         if ($laporan->sla_close) {
             $batasSLA = \Carbon\Carbon::parse($laporan->sla_close)->toDateString();
-            
+
             // Jika sudah selesai
             if ($laporan->tanggal_selesai) {
                 $selesai = \Carbon\Carbon::parse($laporan->tanggal_selesai)->toDateString();
                 return $selesai <= $batasSLA ? 'Tepat Waktu' : 'Terlambat';
             }
-            
+
             // Jika belum selesai tapi sudah lewat SLA
             if (now()->greaterThan($batasSLA)) {
                 return 'Melewati Batas Waktu';
